@@ -14,7 +14,7 @@
 	// We'll add state management and other functionality as needed
 </script>
 <template>
-	<div class="min-h-screen bg-gray-900">
+	<div class="min-h-screen bg-black relative home-layout" >	
 		<!-- Flash Messages Component (Will be created next) -->
 		<FlashMessages />
 		<!-- Top Navigation (Will be created next) -->
@@ -25,7 +25,7 @@
 			:class="{ 'mt-[45px]': !compact }"
 			class="min-h-[calc(100vh-4rem)]">
 			<!-- Main Content Area -->
-			<div class="max-w-7xl mx-auto">
+			<div class="mx-auto">
 				<slot></slot>
 			</div>
 		</main>

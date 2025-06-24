@@ -88,7 +88,7 @@
 
 		<div
 			v-if="$slots.trail || $slots.lead"
-			class="relative rounded-md shadow-sm">
+			class="relative rounded-full shadow-sm">
 			<div
 				v-if="$slots.lead"
 				class="absolute inset-y-0 left-0 pl-1.5 flex items-center pointer-events-none">
@@ -113,8 +113,8 @@
 				:class="[
 					{ 'cursor-pointer': readonly },
 					error
-						? 'bg-red-50 border-red-500  text-red-900 placeholder-red-700 rounded-md focus:ring-red-500 focus:border-red-500  dark:bg-red-100 dark:border-red-400'
-						: 'bg-white border-gray-300 text-gray-900  rounded-md focus:ring-amber-500 focus:border-amber-500 dark:bg-gray-900 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white',
+						? 'bg-red-50 border-red-500  text-red-900 placeholder-red-700 rounded-full focus:ring-red-500 focus:border-red-500  dark:bg-red-100 dark:border-red-400'
+						: 'bg-white border-gray-300 text-gray-900  rounded-full focus:ring-amber-500 focus:border-amber-500 dark:bg-white/10 dark:border-white/10 dark:placeholder-gray-400 dark:text-white',
 					classes,
 					...(Array.isArray(inputClasses)
 						? inputClasses

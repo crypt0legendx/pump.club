@@ -95,45 +95,43 @@
 					]);
 				},
 
-				resolveSymbol: (
+				resolveSymbol: async (
 					symbolName,
 					onSymbolResolvedCallback,
 					onResolveErrorCallback,
 				) => {
-					setTimeout(() => {
-						onSymbolResolvedCallback({
-							name: props.launchpad.symbol,
-							full_name: props.launchpad.symbol,
-							description: props.launchpad.symbol,
-							type: "crypto",
-							session: "24x7",
-							timezone: "Etc/UTC",
-							ticker: props.launchpad.symbol,
-							minmov: 1,
-							pricescale: 100000000,
-							has_intraday: true,
-							intraday_multipliers: [
-								"1",
-								"5",
-								"15",
-								"30",
-								"60",
-								"240",
-							],
-							supported_resolutions: [
-								"1",
-								"5",
-								"15",
-								"30",
-								"60",
-								"240",
-								"D",
-								"W",
-							],
-							volume_precision: 8,
-							data_status: "streaming",
-						});
-					}, 0);
+					await onSymbolResolvedCallback({
+						name: props.launchpad.symbol,
+						full_name: props.launchpad.symbol,
+						description: props.launchpad.symbol,
+						type: "crypto",
+						session: "24x7",
+						timezone: "Etc/UTC",
+						ticker: props.launchpad.symbol,
+						minmov: 1,
+						pricescale: 100000000,
+						has_intraday: true,
+						intraday_multipliers: [
+							"1",
+							"5",
+							"15",
+							"30",
+							"60",
+							"240",
+						],
+						supported_resolutions: [
+							"1",
+							"5",
+							"15",
+							"30",
+							"60",
+							"240",
+							"D",
+							"W",
+						],
+						volume_precision: 8,
+						data_status: "streaming",
+					});
 				},
 
 				getBars: async (

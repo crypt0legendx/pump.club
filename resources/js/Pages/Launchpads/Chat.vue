@@ -36,16 +36,30 @@
 		launchpad_id: props.launchpadId,
 	});
 
+	
+
 	// Websocket connection
 	onMounted(() => {
-		window.Echo.channel(`launchpad.${props.launchpadId}`).listen(
-			"NewMessage",
-			(e) => {
-				console.log(e);
-				messages.value.push(e.message);
+		// window.Echo.channel(`launchpad.${props.launchpadId}`).listen(
+		// 	"NewMessage",
+		// 	(e) => {
+		// 		console.log(e);
+		// 		messages.value.push(e.message);
+		// 		scrollToBottom();
+		// 	},
+		// );
+		const channel = window.Echo.channel(`launchpad.${props.launchpadId}`);
+		
+		channel.listen('NewMessage', (e) => {
+			console.log('Received new message:', e);
+			if (e.message) {
+				console.log('Adding message to list:', e.message);
+				messages.value = [...messages.value, e.message];
 				scrollToBottom();
-			},
-		);
+			} else {
+				console.warn('Received event without message data:', e);
+			}
+		});
 	});
 
 	const scrollToBottom = () => {
@@ -63,6 +77,7 @@
 		form.post(window.route("msgs.store"), {
 			preserveScroll: true,
 			onSuccess: () => {
+				console.log("msg submitted successfully");
 				form.reset();
 				imagePreview.value = null;
 				uploadPath.value = null;
@@ -80,7 +95,7 @@
 </script>
 
 <template>
-	<div class="flex flex-col h-[900px] bg-gray-850 p-4 rounded-lg shadow">
+	<div class="flex flex-col h-[800px] bg-gray-850 p-4 rounded-lg shadow">
 		<!-- Messages Container -->
 		<div
 			v-if="messages.length == 0"
@@ -91,7 +106,7 @@
 				<h3>Be the first to Leave a message</h3>
 			</div>
 		</div>
-		<div class="overflow-y-auto pb-4 messages-container">
+		<div v-if="messages.length != 0" class="overflow-y-auto pb-4 messages-container h-[750px]">
 			<div
 				v-for="message in messages"
 				:key="message.uuid"
