@@ -163,6 +163,10 @@ function editList(idx) {
   if (newName) lists.value[idx].name = newName;
 }
 
+const sortedTrendings = computed(() => {
+    return launchpadsInfo.launchpads.value.slice().sort((a, b) => Number(b.marketCap) - Number(a.marketCap));
+});
+
 const selectedFilter = ref(props.type || 'trending');
 </script>
 
@@ -229,7 +233,7 @@ const selectedFilter = ref(props.type || 'trending');
                             </div>
                         </div>
                         <CarouselContent>
-                            <CarouselItem v-for="item in staticTrending" :key="item.id" class="!basis-auto">
+                            <CarouselItem v-for="item in sortedTrendings" :key="item.id" class="!basis-auto">
                                 <TrendingCard :launchpad="item" />
                             </CarouselItem>
                         </CarouselContent>

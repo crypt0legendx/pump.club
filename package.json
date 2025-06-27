@@ -43,6 +43,7 @@
         "eslint-plugin-prettier": "^4.2.1",
         "eslint-plugin-promise": "^6.1.1",
         "eslint-plugin-vue": "^9.15.1",
+        "filepond": "^4.32.8",
         "filepond-plugin-file-validate-type": "^1.2.9",
         "filepond-plugin-image-preview": "^4.6.12",
         "lightweight-charts": "^4.2.1",

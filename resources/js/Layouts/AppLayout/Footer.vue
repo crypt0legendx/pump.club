@@ -37,7 +37,7 @@
 					href="#"
 					class="hover:text-white transition-colors"
 				>
-					Tech updates
+					Blogposts
 				</Link>
 			</div>
 		</div>

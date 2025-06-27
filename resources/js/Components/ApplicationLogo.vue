@@ -9,7 +9,7 @@
 			v-bind="$attrs"
 			alt="Windster Logo" />
 		<h1 v-else v-bind="$attrs" class="text-3xl text-white">
-			{{ "Pump.com"}}
+			{{ "Pump.club"}}
 		</h1>
 	</Link>
 </template>

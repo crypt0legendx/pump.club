@@ -109,12 +109,14 @@
                 window.route("logout"),
                 {},
                 {
-                    // onSuccess: () => {
-                    //     router.reload();
-                    // },
-                    onFinish() {
-                        isSigningOut.value = false;
-                    },
+                    onSuccess: () => {
+                    isSigningOut.value = false;
+                    disconnect();
+                    router.visit('/');
+                },
+                onFinish: () => {
+                    isSigningOut.value = false;
+                },
                 },
             );
     };
@@ -149,11 +151,11 @@
                         class="flex items-center gap-2 rounded-full bg-black p-3 pr-3 text-white border border-white/20">
                         <img :src="$page.props.auth.user.profile_photo_url" :alt="$page.props.auth.user.name"
                             class="w-8 h-8 rounded-full" />
-                        <span class="font-normal text-white">@{{ $page.props.auth.user.name ?? 'kevin_91' }}</span>
+                        <span class="font-normal text-white">{{ shortenAddress(address) }}</span>
                         <ChevronDown class="w-4 h-4" />
                     </button></DropdownMenuTrigger>
                 <DropdownMenuContent class="bg-black border-white/20 text-white">
-                    <DropdownMenuItem @click="disconnect" class="cursor-pointer">
+                    <DropdownMenuItem @click="signOut" class="cursor-pointer">
                         <Power class="w-4 h-4 mr-2" />
                         <span>Disconnect</span>
                     </DropdownMenuItem>

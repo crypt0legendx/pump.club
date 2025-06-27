@@ -38,31 +38,26 @@ const isAuthenticated = computed(() => !!usePage().props.auth.user);
                 <div class="flex-shrink-0 flex items-center lg:space-x-8">
                     <!-- Navigation Links - Desktop -->
                     <div class="hidden xl:flex lg:items-center lg:space-x-4">
-                        <Link href="/home"
+                        <Link href="/"
                             class="text-gray-300 rounded-full hover:bg-white/10 px-5 py-4 text-sm font-medium flex items-center gap-2 bg-white/10">
                         <House class="w-4 h-4" />
                         {{ $t("Home") }}
                         </Link>
-                        <Link href="/advanced"
+                        <Link href="/"
                             class="text-gray-300 rounded-full hover:bg-white/10 px-5 py-4 text-sm font-medium flex items-center gap-2">
                         <ChartPie class="w-4 h-4" />
-                        {{ $t("Advanced") }}
+                        {{ $t("Watchlist") }}
                         </Link>
-                        <Link href="/livestreams"
+                        <Link href="/"
                             class="text-gray-300 rounded-full hover:bg-white/10 px-5 py-4 text-sm font-medium flex items-center gap-2">
                         <Video class="w-4 h-4" />
-                        {{ $t("Livestreams") }}
+                        {{ $t("Launch") }}
                         </Link>
-                        <Link href="/support"
+                        <Link href="/"
                             class="text-gray-300 rounded-full hover:bg-white/10 px-5 py-4 text-sm font-medium flex items-center gap-2">
                         <MessageSquareMore class="w-4 h-4" />
                         {{ $t("Support") }}
                         </Link>
-                        <button @click="showHowItworks = !showHowItworks"
-                            class="text-gray-300 rounded-full hover:bg-white/10 px-5 py-4 text-sm font-medium flex items-center gap-2">
-                            <EllipsisVertical class="w-4 h-4" />
-                            {{ $t("More") }}
-                        </button>
                     </div>
                 </div>
 
@@ -85,26 +80,22 @@ const isAuthenticated = computed(() => !!usePage().props.auth.user);
         <!-- Mobile menu -->
         <div v-show="isMobileMenuOpen" class="lg:hidden">
             <div class="px-2 pt-2 pb-3 space-y-1">
-                <Link href="/home"
+                <Link href="/"
                     class="block px-5 py-4 rounded text-base font-medium text-gray-300 hover:text-primary hover:bg-gray-700">
                 {{ $t("Home") }}
                 </Link>
-                <Link href="/advanced"
+                <Link href="/"
                     class="block px-5 py-4 rounded text-base font-medium text-gray-300 hover:text-primary hover:bg-gray-700">
-                {{ $t("Advanced") }}
+                {{ $t("Watchlist") }}
                 </Link>
-                <Link href="/livestreams"
+                <Link href="/"
                     class="block px-5 py-4 rounded text-base font-medium text-gray-300 hover:text-primary hover:bg-gray-700">
-                {{ $t("Livestreams") }}
+                {{ $t("Launch") }}
                 </Link>
-                <Link href="/support"
+                <Link href="/"
                     class="block px-5 py-4 rounded text-base font-medium text-gray-300 hover:text-primary hover:bg-gray-700">
                 {{ $t("Support") }}
                 </Link>
-                <button @click="showHowItworks = !showHowItworks"
-                    class="block px-5 py-4 rounded text-base font-medium text-gray-300 hover:text-primary hover:bg-gray-700 w-full text-left">
-                    {{ $t("More") }}
-                </button>
             </div>
         </div>
         <HowItWorksModal v-model:show="showHowItworks" />

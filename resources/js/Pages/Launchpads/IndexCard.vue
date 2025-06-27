@@ -28,8 +28,7 @@ defineProps({
         </div>
         <div class="flex flex-row justify-center gap-3">
         <div class="w-1/3">
-            <img :src="launchpad.logo ?? '/indexcard.png'" class="w-full h-full object-cover rounded-3xl"
-                alt="Launchpad Image" @error="$event.target.src = '/indexcard.png'" />
+        <img :src="launchpad.logo ?? '/indexcard.png'" :alt="launchpad.name" class="w-full h-full object-cover rounded-3xl" />
         </div>
         <div class="flex flex-col gap-1 w-2/3 p-3">
             <div class="flex items-center gap-2">
