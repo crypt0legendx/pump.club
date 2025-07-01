@@ -153,19 +153,11 @@
                         class="flex items-center gap-2 rounded-full bg-black p-3 pr-3 text-white border border-white/20">
                         <img :src="$page.props.auth.user.profile_photo_url" :alt="$page.props.auth.user.name"
                             class="w-8 h-8 rounded-full" />
-<<<<<<< HEAD
                         <span class="font-normal text-white">{{ shortenAddress(address) }}</span>
                         <ChevronDown class="w-4 h-4" />
                     </button></DropdownMenuTrigger>
                 <DropdownMenuContent class="bg-black border-white/20 text-white">
                     <DropdownMenuItem @click="signOut" class="cursor-pointer">
-=======
-                        <span class="font-normal text-white">@{{ $page.props.auth.user.name ?? 'kevin_91' }}</span>
-                        <ChevronDown class="w-4 h-4" />
-                    </button></DropdownMenuTrigger>
-                <DropdownMenuContent class="bg-black border-white/20 text-white">
-                    <DropdownMenuItem @click="disconnect" class="cursor-pointer">
->>>>>>> aa1915e (chore: resolve merge conflicts from feat/create-coin)
                         <Power class="w-4 h-4 mr-2" />
                         <span>Disconnect</span>
                     </DropdownMenuItem>

@@ -38,7 +38,6 @@ const isAuthenticated = computed(() => !!usePage().props.auth.user);
                 <div class="flex-shrink-0 flex items-center lg:space-x-8">
                     <!-- Navigation Links - Desktop -->
                     <div class="hidden xl:flex lg:items-center lg:space-x-4">
-<<<<<<< HEAD
                         <Link href="/"
                             class="text-gray-300 rounded-full hover:bg-white/10 px-5 py-4 text-sm font-medium flex items-center gap-2 bg-white/10">
                         <House class="w-4 h-4" />
@@ -59,33 +58,6 @@ const isAuthenticated = computed(() => !!usePage().props.auth.user);
                         <MessageSquareMore class="w-4 h-4" />
                         {{ $t("Support") }}
                         </Link>
-=======
-                        <Link href="/home"
-                            class="text-gray-300 rounded-full hover:bg-white/10 px-5 py-4 text-sm font-medium flex items-center gap-2 bg-white/10">
-                        <House class="w-4 h-4" />
-                        {{ $t("Home") }}
-                        </Link>
-                        <Link href="/advanced"
-                            class="text-gray-300 rounded-full hover:bg-white/10 px-5 py-4 text-sm font-medium flex items-center gap-2">
-                        <ChartPie class="w-4 h-4" />
-                        {{ $t("Advanced") }}
-                        </Link>
-                        <Link href="/livestreams"
-                            class="text-gray-300 rounded-full hover:bg-white/10 px-5 py-4 text-sm font-medium flex items-center gap-2">
-                        <Video class="w-4 h-4" />
-                        {{ $t("Livestreams") }}
-                        </Link>
-                        <Link href="/support"
-                            class="text-gray-300 rounded-full hover:bg-white/10 px-5 py-4 text-sm font-medium flex items-center gap-2">
-                        <MessageSquareMore class="w-4 h-4" />
-                        {{ $t("Support") }}
-                        </Link>
-                        <button @click="showHowItworks = !showHowItworks"
-                            class="text-gray-300 rounded-full hover:bg-white/10 px-5 py-4 text-sm font-medium flex items-center gap-2">
-                            <EllipsisVertical class="w-4 h-4" />
-                            {{ $t("More") }}
-                        </button>
->>>>>>> aa1915e (chore: resolve merge conflicts from feat/create-coin)
                     </div>
                 </div>
 
@@ -108,13 +80,10 @@ const isAuthenticated = computed(() => !!usePage().props.auth.user);
                 <div class="flex xl:hidden items-center gap-2">
                     <div v-if="isConnected"
                         class="flex items-stretch rounded-full overflow-hidden border border-white/20 grow">
-<<<<<<< HEAD
-=======
                         <PrimaryButton link href="/launch"
                             class="!rounded-none !rounded-l-full !bg-primary !border-0 grow justify-center text-white px-5 py-4">
                             {{ $t("Create Coin") }}
                         </PrimaryButton>
->>>>>>> aa1915e (chore: resolve merge conflicts from feat/create-coin)
                         <Web3Auth class="grow" full />
                     </div>
                 </div>
