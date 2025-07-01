@@ -1,17 +1,8 @@
 <script setup>
 import { computed, ref } from "vue";
 
-import { Link, usePage } from "@inertiajs/vue3";
-import { useAccount } from "@wagmi/vue";
-import {
-    BookOpenText,
-    ChartPie,
-    EllipsisVertical,
-    House,
-    MessageSquareMore,
-    Plus,
-    Video,
-} from "lucide-vue-next";
+import { Link } from "@inertiajs/vue3";
+import { BookOpenText, Plus } from "lucide-vue-next";
 import { TelegramIcon, XIcon } from "vue3-simple-icons";
 
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
@@ -62,8 +53,17 @@ const isAuthenticated = computed(() => !!usePage().props.auth.user);
                 </div>
 
                 <!-- Right Side Actions -->
-                <div class="hidden xl:flex lg:items-center lg:space-x-4">
-                    <!-- Action Buttons - Only show when not authenticated -->
+                <div class="hidden lg:flex lg:items-center lg:space-x-4">
+                    <!-- Action Buttons -->
+                    <PrimaryButton link href="/launch"
+                        :class="[
+                            'mr-2 rounded-full px-5 py-4 text-white hover:bg-transparent flex items-center gap-1 border border-white/10 text-sm',
+                            isConnected ? 'bg-primary' : 'bg-transparent'
+                        ]"
+                    >
+                        Create Coin
+                        <Plus class="w-4 h-4" />
+                    </PrimaryButton>
                     <Web3Auth />
                 </div>
 
@@ -80,22 +80,64 @@ const isAuthenticated = computed(() => !!usePage().props.auth.user);
         <!-- Mobile menu -->
         <div v-show="isMobileMenuOpen" class="lg:hidden">
             <div class="px-2 pt-2 pb-3 space-y-1">
-                <Link href="/"
-                    class="block px-5 py-4 rounded text-base font-medium text-gray-300 hover:text-primary hover:bg-gray-700">
-                {{ $t("Home") }}
-                </Link>
-                <Link href="/"
-                    class="block px-5 py-4 rounded text-base font-medium text-gray-300 hover:text-primary hover:bg-gray-700">
-                {{ $t("Watchlist") }}
-                </Link>
-                <Link href="/"
-                    class="block px-5 py-4 rounded text-base font-medium text-gray-300 hover:text-primary hover:bg-gray-700">
-                {{ $t("Launch") }}
-                </Link>
-                <Link href="/"
-                    class="block px-5 py-4 rounded text-base font-medium text-gray-300 hover:text-primary hover:bg-gray-700">
-                {{ $t("Support") }}
-                </Link>
+                   <PrimaryButton link href="/launch"
+                            class="!rounded-none !rounded-l-full !bg-primary !border-0 grow justify-center text-white px-5 py-4">
+                            Create Coin
+                        </PrimaryButton>
+                <button
+                    @click="showHowItworks = !showHowItworks"
+                    class="block px-3 py-2 rounded text-base font-medium text-gray-300 hover:text-primary hover:bg-gray-700"
+                >
+                    {{ $t("How it works") }}
+                </button>
+            </div>
+            <!-- Mobile Social Links and Actions -->
+            <div class="pt-4 pb-3 border-t border-gray-700">
+                <div class="px-2 space-y-1">
+                    <!-- Social Links -->
+                    <div class="flex items-center space-x-2 px-3 py-2">
+                        <PrimaryButton
+                            size="sm"
+                            outlined
+                            iconMode
+                        >
+                            <XIcon class="w-4 h-4" />
+                        </PrimaryButton>
+                        <PrimaryButton
+                            size="sm"
+                            outlined
+                            iconMode
+                        >
+                            <BookOpenText class="w-5 h-5" />
+                        </PrimaryButton>
+                        <PrimaryButton
+                            size="sm"
+                            outlined
+                            iconMode
+                        >
+                            <TelegramIcon class="w-4 h-4" />
+                        </PrimaryButton>
+                    </div>
+                    <!-- Action Buttons -->
+                    <div class="space-y-2 px-3">
+                        <PrimaryButton
+                            size="sm"
+                            link
+                            href="/launch"
+                            class="w-full justify-center"
+                        >
+                            {{ $t("Launch Meme") }}
+                        </PrimaryButton>
+
+                        <!-- Action Buttons -->
+                        <Web3Auth
+                            size="sm"
+                            class="flex-col gap-2"
+                            full
+                        />
+                        <AuthLink full />
+                    </div>
+                </div>
             </div>
         </div>
         <HowItWorksModal v-model:show="showHowItworks" />
