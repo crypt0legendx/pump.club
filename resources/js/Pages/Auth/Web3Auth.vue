@@ -153,7 +153,7 @@
                         class="flex items-center gap-2 rounded-full bg-black p-3 pr-3 text-white border border-white/20">
                         <img :src="$page.props.auth.user.profile_photo_url" :alt="$page.props.auth.user.name"
                             class="w-8 h-8 rounded-full" />
-                        <span class="font-normal text-white">{{ shortenAddress(address) }}</span>
+                        <span class="text-xs text-white">{{ shortenAddress(address) }}</span>
                         <ChevronDown class="w-4 h-4" />
                     </button></DropdownMenuTrigger>
                 <DropdownMenuContent class="bg-black border-white/20 text-white">

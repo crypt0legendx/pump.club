@@ -12,10 +12,8 @@ import {
     Plus,
     Video,
 } from "lucide-vue-next";
-import { TelegramIcon, XIcon } from "vue3-simple-icons";
 
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
-import BaseButton from "@/Components/BaseButton.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import HowItWorksModal from "@/Layouts/AppLayout/HowItWorksModal.vue";
 import Web3Auth from "@/Pages/Auth/Web3Auth.vue";
@@ -64,7 +62,7 @@ const isAuthenticated = computed(() => !!usePage().props.auth.user);
                 <!-- Right Side Actions -->
                 <div class="hidden xl:flex lg:items-center lg:space-x-4">
                     <!-- Action Buttons - Only show when not authenticated -->
-                    <PrimaryButton link href="/launch"
+                    <PrimaryButton link href="/"
                         :class="[
                             'mr-2 rounded-full px-5 py-4 text-white hover:bg-transparent flex items-center gap-1 border border-white/10 text-sm',
                             isConnected ? 'bg-primary' : 'bg-transparent'
@@ -80,7 +78,7 @@ const isAuthenticated = computed(() => !!usePage().props.auth.user);
                 <div class="flex xl:hidden items-center gap-2">
                     <div v-if="isConnected"
                         class="flex items-stretch rounded-full overflow-hidden border border-white/20 grow">
-                        <PrimaryButton link href="/launch"
+                        <PrimaryButton link href="/"
                             class="!rounded-none !rounded-l-full !bg-primary !border-0 grow justify-center text-white px-5 py-4">
                             {{ $t("Create Coin") }}
                         </PrimaryButton>

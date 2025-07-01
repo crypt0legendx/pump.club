@@ -1,6 +1,6 @@
 <!-- eslint-disable import/order -->
 <script setup>
-import { computed, ref } from "vue";
+import { computed, ref, onMounted } from "vue";
 
 import { router } from "@inertiajs/vue3";
 import { debouncedWatch, useUrlSearchParams } from "@vueuse/core";
@@ -16,6 +16,8 @@ import {
     Zap,
     Clock,
     CheckCircle,
+    X,
+    Check,
 } from "lucide-vue-next";
 
 import BaseButton from "@/Components/BaseButton.vue";
@@ -44,6 +46,68 @@ import TrendingCard from "@/Components/TrendingCard.vue";
 import BarButton from "@/Pages/Launchpads/BarButton.vue";
 import IndexCard from "@/Pages/Launchpads/IndexCard.vue";
 import { useChainId } from "@wagmi/vue";
+import watchLists from '@/store/watchLists';
+
+const useLists = () => {
+    const lists = ref([
+        { name: 'Main list', default: true },
+        { name: 'List #1', default: false },
+        { name: 'List #2', default: false },
+    ]);
+
+    const loadLists = () => {
+        try {
+            const storedLists = localStorage.getItem('watchListsOptions');
+            if (storedLists) {
+                lists.value = JSON.parse(storedLists);
+            }
+        } catch (error) {
+            console.error('Error loading lists from localStorage:', error);
+        }
+    };
+
+    // Save lists to localStorage
+    const saveLists = () => {
+        try {
+            localStorage.setItem('watchListsOptions', JSON.stringify(lists.value));
+        } catch (error) {
+            console.error('Error saving lists to localStorage:', error);
+        }
+    };
+
+    // Add new list
+    const addList = (name) => {
+        if (name.trim()) {
+            lists.value.push({ name: name.trim(), default: false });
+            saveLists();
+        }
+    };
+
+    // Delete list
+    const deleteList = (idx) => {
+        if (!lists.value[idx].default) {
+            lists.value.splice(idx, 1);
+            saveLists();
+        }
+    };
+
+    // Edit list name
+    const editList = (idx, newName) => {
+        if (newName && newName.trim()) {
+            lists.value[idx].name = newName.trim();
+            saveLists();
+        }
+    };
+
+    return {
+        lists,
+        loadLists,
+        saveLists,
+        addList,
+        deleteList,
+        editList
+    };
+};
 
 const props = defineProps({
     launchpads: [Array, Object],
@@ -51,6 +115,7 @@ const props = defineProps({
     usdRates: [Array, Object],
     type: String,
 });
+
 const launchpadsList = computed(() => props.launchpads.data);
 const launchpadsInfo = useLaunchpadsData(launchpadsList, props.usdRates);
 const showHowItWorks = ref(false);
@@ -82,40 +147,6 @@ debouncedWatch(
         maxWait: 700,
     },
 );
-const animate = ref(true);
-
-const staticLaunchpads = ref(Array.from({ length: 11 }, (_, i) => ({
-    id: i,
-    contract: `0x${[...Array(40)].map(() => Math.floor(Math.random() * 16).toString(16)).join('')}`,
-    name: 'Verse World',
-    symbol: 'Verse',
-    description: 'The artist formerly known as Kanye West has modified his name once more—this time to "Ye Ye," according to California business filings obtained by Page Six.',
-    logo: i % 2 === 0 ? '/indexcard.png' : '/indexcard.png',
-    market_cap_formatted: '$599.3M',
-    msg_count: 746,
-    createdAgo: new Date().toISOString(),
-    profile_photo_url: '/indexcard.png',
-    status: 'bonding'
-})));
-
-const staticTrending = ref(Array.from({ length: 10 }, (_, i) => ({
-    id: i,
-    contract: `0x${[...Array(40)].map(() => Math.floor(Math.random() * 16).toString(16)).join('')}`,
-    name: 'Verse World',
-    symbol: 'Verse',
-    image: i % 2 === 0 ? '/trendingcard.png' : '/trendingcard.png',
-    market_cap_formatted: '$599.3M',
-    msg_count: 746,
-})));
-
-const sortOptions = [
-    { value: 'featured', label: 'Featured' },
-    { value: 'last_trade', label: 'Last trade' },
-    { value: 'creation_time', label: 'Creation time' },
-    { value: 'last_reply', label: 'Last reply' },
-    { value: 'currently_live', label: 'Currently live' },
-    { value: 'market_cap', label: 'Market cap' },
-];
 
 const categories = ref([
     { emoji: '🐱', label: 'Animal' },
@@ -140,34 +171,74 @@ const categories = ref([
 const selectedTab = ref('all');
 const showAddModal = ref(false);
 
-// Modal state for managing lists
+const { lists, loadLists, addList, deleteList, editList } = useLists();
+const selectedList = ref('Main list');
 const newListName = ref('');
-const lists = ref([
-  { name: 'Main list', default: true },
-  { name: 'List #1', default: false },
-  { name: 'List #2', default: false },
-]);
 
-function addList() {
-  if (newListName.value.trim()) {
-    lists.value.push({ name: newListName.value.trim(), default: false });
-    newListName.value = '';
-  }
-}
-function deleteList(idx) {
-  if (!lists.value[idx].default) lists.value.splice(idx, 1);
-}
-function editList(idx) {
-  // Placeholder for edit logic
-  const newName = prompt('Rename list', lists.value[idx].name);
-  if (newName) lists.value[idx].name = newName;
+// Add state for editing
+const editingListIndex = ref(null);
+const editingListName = ref('');
+
+onMounted(() => {
+    loadLists();
+    if (lists.value.length > 0) {
+        selectedList.value = lists.value[0].name;
+    }
+});
+
+function handleAddList() {
+    if (newListName.value.trim()) {
+        addList(newListName.value);
+        newListName.value = '';
+    }
 }
 
-const sortedTrendings = computed(() => {
+function handleDeleteList(idx) {
+    deleteList(idx);
+    if (lists.value.length > 0 && selectedList.value === lists.value[idx]?.name) {
+        selectedList.value = lists.value[0].name;
+    }
+}
+
+function handleEditList(idx) {
+    editingListIndex.value = idx;
+    editingListName.value = lists.value[idx].name;
+}
+
+// Add function to save the edit
+function saveEdit() {
+    if (editingListName.value && editingListName.value.trim()) {
+        editList(editingListIndex.value, editingListName.value);
+        // Update selectedList if the edited list was selected
+        if (selectedList.value === lists.value[editingListIndex.value].name) {
+            selectedList.value = editingListName.value.trim();
+        }
+    }
+    editingListIndex.value = null;
+    editingListName.value = '';
+}
+
+// Add function to cancel edit
+function cancelEdit() {
+    editingListIndex.value = null;
+    editingListName.value = '';
+}
+
+const selectedFilter = ref(props.type || 'trending');
+
+console.log(launchpadsInfo.launchpads.value)
+const watchedLaunchpads = computed(() => {
+    const filteredWatchList = watchLists.value.filter(watch => watch.list === selectedList.value);
+    
+    return filteredWatchList
+        .map(watch => launchpadsInfo.launchpads.value.find(lp => lp.contract === watch.c_address))
+        .filter(Boolean);
+});
+
+const sortedLaunchpads = computed(() => {
     return launchpadsInfo.launchpads.value.slice().sort((a, b) => Number(b.marketCap) - Number(a.marketCap));
 });
 
-const selectedFilter = ref(props.type || 'trending');
 </script>
 
 <template>
@@ -233,7 +304,7 @@ const selectedFilter = ref(props.type || 'trending');
                             </div>
                         </div>
                         <CarouselContent>
-                            <CarouselItem v-for="item in sortedTrendings" :key="item.id" class="!basis-auto">
+                            <CarouselItem v-for="item in sortedLaunchpads" :key="item.id" class="!basis-auto">
                                 <TrendingCard :launchpad="item" />
                             </CarouselItem>
                         </CarouselContent>
@@ -262,6 +333,7 @@ const selectedFilter = ref(props.type || 'trending');
                                         'px-4 md:px-8 py-2 md:py-4 text-sm font-medium rounded-full flex items-center gap-1',
                                         selectedTab === 'watchlist' ? 'text-white bg-gray-800/50 border border-zinc-700/50' : 'text-gray-500 bg-gray-800/50 border border-zinc-700/50'
                                     ]"
+                                    @click="selectedTab = 'watchlist'"
                                 >
                                     <Star class="w-4 h-4" />
                                     Watchlist
@@ -301,7 +373,7 @@ const selectedFilter = ref(props.type || 'trending');
                         </div>
                     </div>
                     <template v-if="selectedTab === 'all'">
-                        <div v-if="launchpadsInfo.launchpads.value.length > 0">
+                        <!-- <div v-if="launchpads.length > 0"> -->
                             <Carousel class="w-full mt-4 mb-4" :opts="{
                                 align: 'start',
                             }">
@@ -320,14 +392,60 @@ const selectedFilter = ref(props.type || 'trending');
                                 <CarouselNext
                                     class="absolute top-0 right-0 translate-x-0 translate-y-0 text-white border-none h-full !bg-transparent" />
                             </Carousel>
-                        </div>
+                        <!-- </div> -->
                     </template>
                 </div>
                 <div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-                        <IndexCard v-for="(launchpad, index) in launchpadsInfo.launchpads.value" :key="index"
-                            :launchpad="launchpad" />
-                    </div>
+                    <template v-if="selectedTab === 'watchlist'">
+                        <div class="flex items-center gap-4 mb-8">
+                            <button
+                                v-for="list in lists"
+                                :key="list.name"
+                                :class="[
+                                    'px-4 md:px-8 py-2 md:py-4 text-sm font-medium rounded-full',
+                                    selectedList === list.name 
+                                        ? 'text-white bg-gray-800/50 border border-zinc-700/50' 
+                                        : 'text-gray-500 bg-gray-800/50 border border-zinc-700/50'
+                                ]"
+                                @click="selectedList = list.name"
+                            >
+                                {{ list.name }}
+                            </button>
+                            <button
+                                class="px-4 md:px-8 py-2 md:py-4 text-sm font-medium text-gray-500 bg-gray-800/50 border border-zinc-700/50 rounded-full flex items-center gap-1"
+                                @click="showAddModal = true"
+                            >
+                                Add
+                                <Plus class="w-4 h-4" />
+                            </button>
+                        </div>
+                        <template v-if="watchedLaunchpads.length > 0">
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                                <IndexCard v-for="(item, index) in watchedLaunchpads" :key="item.c_address"
+                                    :launchpad="item" :watchList="true" />
+                            </div>
+                        </template>
+                        <template v-else>
+                            <div
+                            class="col-span-full flex flex-col items-center justify-center py-20 text-center border border-white/10 rounded-3xl p-10 bg-gray-800/50">
+                            <img src="/empty.png" alt="No launchpads found" class="w-24 h-24 text-gray-500" />
+                            <h3 class="mt-4 text-xl font-semibold text-white">
+                                Your watchlist is empty
+                            </h3>
+                            <p class="mt-2 text-sm text-gray-400 max-w-md">
+                                to add a coin to the watchlist, click the or 'add to <br>watchlist' buttons on a
+                                coin
+                                detail screen.
+                            </p>
+                        </div>
+                        </template>
+                    </template>
+                    <template v-else>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                            <IndexCard v-for="(launchpad, index) in launchpadsInfo.launchpads.value" :key="index"
+                                :launchpad="launchpad" :watchList="false" />
+                        </div>
+                    </template>
                 </div>
             </template>
             <LoaderCircle v-if="type !== 'mine' && launchpadsInfo.loading.value"
@@ -336,7 +454,6 @@ const selectedFilter = ref(props.type || 'trending');
             <HowItWorksModal v-model:show="showHowItWorks" />
         </div>
     </AppLayout>
-    <!-- Add Modal -->
     <template v-if="showAddModal">
         <div class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/50">
             <div class="bg-gray-900 rounded-2xl p-10 w-full max-w-fit relative shadow-xl border border-white/10">
@@ -345,33 +462,52 @@ const selectedFilter = ref(props.type || 'trending');
                 <div class="text-gray-400 text-center mb-6">Create new lists or manage your existing lists here</div>
                 <div class="border-t border-white/10 mb-6"></div>
                 <div class="space-y-3 max-h-[300px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-900 pr-1">
-                  <!-- Input field at the top -->
-                  <div class="flex items-center gap-2 px-4 py-3 bg-transparent">
+                  <div class="flex items-center gap-2 bg-transparent">
                     <input
                       v-model="newListName"
                       type="text"
                       placeholder="Name list"
                       class="flex-1 bg-transparent border border-zinc-700/50 rounded-xl px-4 py-2 text-white placeholder-gray-500 outline-none focus:border-primary"
+                      @keyup.enter="handleAddList"
                     />
                     <button
-                      @click="addList"
+                      @click="handleAddList"
                       class="bg-gradient-to-r from-orange-400 to-yellow-500 text-white font-semibold rounded-xl px-6 py-2 disabled:opacity-50"
                       :disabled="!newListName.trim()"
                     >Add</button>
                   </div>
                   
-                  <!-- Existing lists -->
                   <template v-for="(list, idx) in lists" :key="idx">
                     <div class="flex items-center justify-between bg-[#232326] rounded-xl px-4 py-3">
-                      <span class="text-white font-medium">{{ list.name }}</span>
-                      <div class="flex items-center gap-2">
-                        <button v-if="!list.default" @click="editList(idx)" class="text-gray-400 hover:text-primary">
-                          <PencilLine class="w-4 h-4" />
-                        </button>
-                        <button v-if="!list.default" @click="deleteList(idx)" class="text-red-500 hover:text-red-700">
-                          <Trash2 class="w-4 h-4" />
-                        </button>
-                      </div>
+                        <div v-if="editingListIndex === idx" class="flex-1">
+                            <input
+                                v-model="editingListName"
+                                type="text"
+                                class="w-full bg-transparent border border-zinc-700/50 rounded-xl px-4 py-2 text-white outline-none focus:border-primary"
+                                @keyup.enter="saveEdit"
+                                @keyup.esc="cancelEdit"
+                                ref="editInput"
+                                @blur="saveEdit"
+                            />
+                        </div>
+                        <span v-else class="text-white font-medium">{{ list.name }}</span>
+                        
+                        <div class="flex items-center gap-2">
+                            <button v-if="!list.default && editingListIndex !== idx" @click="handleEditList(idx)" class="text-gray-400">
+                                <PencilLine class="w-4 h-4" />
+                            </button>
+                            <button v-if="!list.default && editingListIndex !== idx" @click="handleDeleteList(idx)" class="text-red-500">
+                                <Trash2 class="w-4 h-4" />
+                            </button>
+                            <div v-if="editingListIndex === idx" class="flex items-center gap-2">
+                                <button @click="saveEdit" class="text-green-500">
+                                    <Check class="w-4 h-4" />
+                                </button>
+                                <button @click="cancelEdit" class="text-red-500">
+                                    <X class="w-4 h-4" />
+                                </button>
+                            </div>
+                        </div>
                     </div>
                   </template>
                 </div>
