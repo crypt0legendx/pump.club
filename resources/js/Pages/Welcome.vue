@@ -336,4 +336,46 @@ const selectedFilter = ref(props.type || 'trending');
             <HowItWorksModal v-model:show="showHowItWorks" />
         </div>
     </AppLayout>
+    <!-- Add Modal -->
+    <template v-if="showAddModal">
+        <div class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/50">
+            <div class="bg-gray-900 rounded-2xl p-10 w-full max-w-fit relative shadow-xl border border-white/10">
+                <button class="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl" @click="showAddModal = false">&times;</button>
+                <h2 class="text-3xl font-normal text-white text-center mb-2">Manage lists</h2>
+                <div class="text-gray-400 text-center mb-6">Create new lists or manage your existing lists here</div>
+                <div class="border-t border-white/10 mb-6"></div>
+                <div class="space-y-3 max-h-[300px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-900 pr-1">
+                  <!-- Input field at the top -->
+                  <div class="flex items-center gap-2 px-4 py-3 bg-transparent">
+                    <input
+                      v-model="newListName"
+                      type="text"
+                      placeholder="Name list"
+                      class="flex-1 bg-transparent border border-zinc-700/50 rounded-xl px-4 py-2 text-white placeholder-gray-500 outline-none focus:border-primary"
+                    />
+                    <button
+                      @click="addList"
+                      class="bg-gradient-to-r from-orange-400 to-yellow-500 text-white font-semibold rounded-xl px-6 py-2 disabled:opacity-50"
+                      :disabled="!newListName.trim()"
+                    >Add</button>
+                  </div>
+                  
+                  <!-- Existing lists -->
+                  <template v-for="(list, idx) in lists" :key="idx">
+                    <div class="flex items-center justify-between bg-[#232326] rounded-xl px-4 py-3">
+                      <span class="text-white font-medium">{{ list.name }}</span>
+                      <div class="flex items-center gap-2">
+                        <button v-if="!list.default" @click="editList(idx)" class="text-gray-400 hover:text-primary">
+                          <PencilLine class="w-4 h-4" />
+                        </button>
+                        <button v-if="!list.default" @click="deleteList(idx)" class="text-red-500 hover:text-red-700">
+                          <Trash2 class="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </template>
+                </div>
+            </div>
+        </div>
+    </template>
 </template>

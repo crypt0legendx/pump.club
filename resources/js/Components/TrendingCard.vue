@@ -23,7 +23,11 @@ const props = defineProps({
             <p class="text-sm text-gray-400">({{ launchpad.symbol }})</p>
         </div>
         <div class="text-xs text-green-400 bg-green-500/10 rounded-full px-2 py-1 self-start">
+<<<<<<< HEAD
             Market cap: ${{ launchpad.marketCap }}
+=======
+            Market cap: ${{ launchpadInfo.marketCap.value }}
+>>>>>>> aa1915e (chore: resolve merge conflicts from feat/create-coin)
         </div>
         <div class="text-sm text-gray-400">
             Replies: {{ launchpad.msg_count }}
