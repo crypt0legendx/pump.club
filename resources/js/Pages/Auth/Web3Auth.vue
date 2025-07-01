@@ -32,6 +32,10 @@
         useWagmiAdapter
     } from "@/lib/wagmi.js";
     createAppKit({
+        features: {
+            email: false,
+            socials: false,
+        },
         adapters: [useWagmiAdapter({
             rpc: usePage().props.rpc ?? 'ankr',
             ankr: usePage().props.ankr,
