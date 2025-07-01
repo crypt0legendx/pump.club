@@ -136,7 +136,6 @@
 		});
 		tradeForm.txid = state.txhash;
 		tradeForm.type = info.currentPhase === 0 ? "prebond" : tradeType.value;
-		console.log(logs);
 		tradeForm.qty = formatEther(logs?.[0]?.args?.tokenAmount);
 		tradeForm.amount = formatEther(logs?.[0]?.args?.ethAmount);
 		tradeForm.address = logs?.[0]?.args?.buyer;
@@ -180,7 +179,6 @@
 					`${amount.value}`,
 					slippagePercent.value,
 				);
-				console.log(info);
 				args = [info.minimumOutputAmountWei];
 			}
 			if (tradeType.value === "sell") {

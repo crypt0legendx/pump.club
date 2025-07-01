@@ -148,6 +148,7 @@ export default {
         "Save Promo": "Save Promo",
         "sec": "sec",
         "SELL": "SELL",
+        "Search": "Search",
         "SLIPPAGE": "SLIPPAGE",
         "Starts At": "Starts At",
         "Status": "Status",

@@ -90,28 +90,6 @@ const isAuthenticated = computed(() => !!usePage().props.auth.user);
 
         <!-- Mobile menu -->
         <div v-show="isMobileMenuOpen" class="lg:hidden">
-            <div class="px-2 pt-2 pb-3 space-y-1">
-                <Link href="/home"
-                    class="block px-5 py-4 rounded text-base font-medium text-gray-300 hover:text-primary hover:bg-gray-700">
-                {{ $t("Home") }}
-                </Link>
-                <Link href="/advanced"
-                    class="block px-5 py-4 rounded text-base font-medium text-gray-300 hover:text-primary hover:bg-gray-700">
-                {{ $t("Advanced") }}
-                </Link>
-                <Link href="/livestreams"
-                    class="block px-5 py-4 rounded text-base font-medium text-gray-300 hover:text-primary hover:bg-gray-700">
-                {{ $t("Livestreams") }}
-                </Link>
-                <Link href="/support"
-                    class="block px-5 py-4 rounded text-base font-medium text-gray-300 hover:text-primary hover:bg-gray-700">
-                {{ $t("Support") }}
-                </Link>
-                <button @click="showHowItworks = !showHowItworks"
-                    class="block px-5 py-4 rounded text-base font-medium text-gray-300 hover:text-primary hover:bg-gray-700 w-full text-left">
-                    {{ $t("More") }}
-                </button>
-            </div>
         </div>
         <HowItWorksModal v-model:show="showHowItworks" />
     </nav>
