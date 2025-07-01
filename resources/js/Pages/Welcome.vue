@@ -47,6 +47,7 @@ import BarButton from "@/Pages/Launchpads/BarButton.vue";
 import IndexCard from "@/Pages/Launchpads/IndexCard.vue";
 import { useChainId } from "@wagmi/vue";
 import watchLists from '@/store/watchLists';
+import PrimaryButton from "@/Components/PrimaryButton.vue";
 
 const useLists = () => {
     const lists = ref([
@@ -226,7 +227,6 @@ function cancelEdit() {
 
 const selectedFilter = ref(props.type || 'trending');
 
-console.log(launchpadsInfo.launchpads.value)
 const watchedLaunchpads = computed(() => {
     const filteredWatchList = watchLists.value.filter(watch => watch.list === selectedList.value);
     

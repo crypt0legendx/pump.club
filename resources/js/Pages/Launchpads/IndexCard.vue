@@ -106,8 +106,6 @@ watch(selectedList, (val) => {
      selectOpen.value = false;
     });
 
-console.log(watchLists.value);
-
 </script>
 
 <template>

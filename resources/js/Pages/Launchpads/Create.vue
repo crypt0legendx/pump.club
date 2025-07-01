@@ -79,7 +79,6 @@
 			logs: state.receipt.logs,
 			eventName: ["BondingCurveSystemDeployed"],
 		});
-		console.log(logs);
 		form.contract = logs?.[0]?.args?.bondingCurveAddress;
 		form.token = logs?.[0]?.args?.tokenAddress;
 		save();
