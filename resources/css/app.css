@@ -430,9 +430,15 @@
 	scrollbar-color: #4b5563 #23272f;
 }
 
-.home-layout {
-	background: radial-gradient(ellipse 50% 30% at 50% 0%, rgba(218, 80, 0, 0.445) 0%, rgba(0, 0, 0, 0) 100%) no-repeat, url("../../public/right-circle.png") right 0px no-repeat, url("../../public/circle.png") left 0px no-repeat, black;
+.home-bg {
+	@apply bg-black;
+	background: radial-gradient(ellipse 50% 30% at 50% 0%, rgba(218, 80, 0, 0.445) 0%, rgba(0, 0, 0, 0) 100%) black;
+}
 
+@media (min-width: 768px) {
+	.home-bg {
+		background: radial-gradient(ellipse 50% 30% at 50% 0%, rgba(218, 80, 0, 0.445) 0%, rgba(0, 0, 0, 0) 100%) no-repeat, url("../../public/right-circle.png") right 0px no-repeat, url("../../public/circle.png") left 0px no-repeat, black;
+	}
 }
 
 .footer-layout {

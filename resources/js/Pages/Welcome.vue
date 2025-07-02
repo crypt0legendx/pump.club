@@ -239,21 +239,37 @@ const sortedLaunchpads = computed(() => {
     return launchpadsInfo.launchpads.value.slice().sort((a, b) => Number(b.marketCap) - Number(a.marketCap));
 });
 
+const navHeight = ref(90)
+const navRef = ref(null)
+
+onMounted(() => {
+  if (navRef.value) {
+    navHeight.value = navRef.value.offsetHeight
+  }
+})
+
 </script>
 
 <template>
     <AppLayout compact>
         <template #header>
-            <div class="hidden md:flex items-center w-full bg-black h-12 relative overflow-x-hidden bg-black/10">
-                <div class="flex w-full items-center overflow-x-auto [scrollbar-width:none]">
+            <div class="hidden md:flex items-center w-full bg-black relative bg-black/10 pt-[calc(100vh-90px)]" :style="{ paddingTop: `calc(10px + ${navHeight}px)` }">
+                <div class="flex w-full items-center">
                     <div class="flex w-full items-center">
-                        <BarButton v-for="(launch, i) in top" :key="launch.id" :launch="launch" :active="i === 0" />
+                    <Carousel class="w-full" :opts="{ align: 'start' }">
+                        <CarouselContent>
+                        <CarouselItem
+                            v-for="(launch, i) in top"
+                            :key="launch.id"
+                            class="!basis-auto"
+                        >
+                            <BarButton :launch="launch" :active="i === 0" />
+                        </CarouselItem>
+                        </CarouselContent>
+                    </Carousel>
                     </div>
                 </div>
-                <div
-                    class="h-12 w-20 absolute right-0 pointer-events-none bg-gradient-to-r from-transparent via-gray-850/50 to-gray-850">
                 </div>
-            </div>
         </template>
         <div class="grid my-4 lg:my-8 mx-5 lg:mx-10">
             <div v-if="type === 'mine'" class="flex flex-col justify-center">
@@ -280,7 +296,7 @@ const sortedLaunchpads = computed(() => {
                             </template>
                             <template #trail>
                                 <PrimaryButton size="xs"
-                                    class="rounded-full text-white hover:bg-transparent px-4 py-1.5 cursor-pointer"
+                                    class="rounded-full text-white hover:bg-transparent px-4 py-2.5 cursor-pointer"
                                     style="background: linear-gradient(to right, #6C2801 0%, #DA5200 34%, #E97C02 100%);">
                                     {{ $t("Search") }}
                                 </PrimaryButton>
@@ -316,7 +332,7 @@ const sortedLaunchpads = computed(() => {
                             Explore
                         </h2>
                     </div>
-                    <div class="flex justify-between items-center mt-4 pt-4 pb-4 border-b border-b-white/10">
+                     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mt-4 pt-4 pb-4 border-b border-b-white/10 gap-4">
                         <div class="flex items-center w-full md:w-auto justify-between gap-2">
                             <div class="flex items-center gap-2">
                                 <button
@@ -361,7 +377,7 @@ const sortedLaunchpads = computed(() => {
                                     </Select>
                             </div>
                         </div>
-                        <div class="items-center gap-4 hidden md:flex">
+                        <div class="flex justify-start items-center gap-4 border-t border-white/10 pt-4 md:pt-0 md:border-t-0 w-full md:w-auto">
                             <label class="flex items-center text-sm text-white gap-2">
                                 <Checkbox id="animations" />
                                 Animations

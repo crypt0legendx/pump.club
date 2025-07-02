@@ -150,13 +150,14 @@
             <DropdownMenu>
                 <DropdownMenuTrigger>
                     <button
-                        class="flex items-center gap-2 rounded-full bg-black p-3 pr-3 text-white border border-white/20">
+                        class="flex justify-center items-center gap-2 rounded-full bg-black/10 p-3 pr-3 text-white border border-white/20 w-full">
                         <img :src="$page.props.auth.user.profile_photo_url" :alt="$page.props.auth.user.name"
                             class="w-8 h-8 rounded-full" />
                         <span class="text-xs text-white">{{ shortenAddress(address) }}</span>
                         <ChevronDown class="w-4 h-4" />
-                    </button></DropdownMenuTrigger>
-                <DropdownMenuContent class="bg-black border-white/20 text-white">
+                    </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent class="!bg-black/10 !border-white/20 text-white">
                     <DropdownMenuItem @click="signOut" class="cursor-pointer">
                         <Power class="w-4 h-4 mr-2" />
                         <span>Disconnect</span>
@@ -173,12 +174,8 @@
             </DangerButton>
         </template>
         <template v-else>
-            <PrimaryButton :size="size" :class="[
-                { 'w-full': full },
-                grouped
-                    ? '!rounded-none !rounded-r-full !border-0'
-                    : 'rounded-full border',
-            ]" @click="openConnectModal" class="border-white/20 text-white px-5 py-4" style="
+            <button :class="{ 'w-full': full }" @click="openConnectModal" 
+            class="hidden md:flex items-center gap-2 border-white/20 text-white rounded-full px-5 py-4 font-medium text-sm" style="
                     background: linear-gradient(
                         to right,
                         #6c2801 0%,
@@ -187,8 +184,12 @@
                     );
                 ">
                 Log In
-                <ChevronRight v-if="!grouped" class="w-4 h-4" />
-            </PrimaryButton>
+                <ChevronRight v-if="!grouped" class="hidden lg:block w-4 h-4" />
+            </button>
+            <button :class="{ 'w-full': full }" @click="openConnectModal" 
+            class="md:hidden flex bg-transparent text-white font-medium text-sm hover:bg-transparent w-full !p-1">
+                Log In
+            </button>
         </template>
     </div>
 </template>
