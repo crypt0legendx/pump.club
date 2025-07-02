@@ -10,8 +10,8 @@ const props = defineProps({
         class="bg-gray-800/50 rounded-[32px] py-1 px-3 flex items-center gap-4 w-[340px] flex-shrink-0"
         draggable="false">
     <div class="w-24 h-24 rounded-3xl overflow-hidden flex-shrink-0">
-        <img :src="launchpad.image ?? '/indexcard.png'" class="w-full h-full object-cover rounded-3xl" alt="Launchpad Image"
-            draggable="false" />
+        <img :src="launchpad.logo ?? '/indexcard.png'" class="w-full h-full object-cover rounded-3xl" alt="Launchpad Image"
+            draggable="false" @error="$event.target.src = '/indexcard.png'"/>
     </div>
     <div class="flex flex-col gap-2 justify-center overflow-hidden">
         <div>
@@ -24,7 +24,7 @@ const props = defineProps({
             Market cap: ${{ launchpad.marketCap }}
         </div>
         <div class="text-sm text-gray-400">
-            Replies: {{ launchpad.msg_count }}
+            Replies: {{ launchpad.msg_count ?? 0 }}
         </div>
     </div>
     </Link>

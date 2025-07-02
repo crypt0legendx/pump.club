@@ -162,7 +162,7 @@ watch(selectedList, (val) => {
         </div>
         <div class="flex flex-row justify-center gap-3">
         <div class="w-1/3">
-            <img :src="launchpad.logo ?? '/storage/uploads/8249e83c1c1f9f44217d5e23e4ac9482.png'" class="w-full h-full object-cover rounded-3xl"
+            <img :src="launchpad.logo" class="w-full h-full object-cover rounded-3xl"
                 alt="Launchpad Image" @error="$event.target.src = '/indexcard.png'" />
         </div>
         <div class="flex flex-col gap-1 w-2/3 p-3">
@@ -185,7 +185,7 @@ watch(selectedList, (val) => {
                 Market cap: {{ launchpad.marketCap }}
             </div>
             <div class="text-sm text-gray-400">
-                Replies: {{ launchpad.msg_count ?? 746 }}
+                Replies: {{ launchpad.msg_count ?? 0 }}
             </div>
         </div>
     </div>
