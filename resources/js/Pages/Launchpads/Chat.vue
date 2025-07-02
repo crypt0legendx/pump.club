@@ -34,26 +34,16 @@
 		image_path: null,
 		image_upload: false,
 		launchpad_id: props.launchpadId,
-	});
+	}); 
 
 	
 
 	// Websocket connection
 	onMounted(() => {
-		// window.Echo.channel(`launchpad.${props.launchpadId}`).listen(
-		// 	"NewMessage",
-		// 	(e) => {
-		// 		console.log(e);
-		// 		messages.value.push(e.message);
-		// 		scrollToBottom();
-		// 	},
-		// );
 		const channel = window.Echo.channel(`launchpad.${props.launchpadId}`);
-		
 		channel.listen('NewMessage', (e) => {
 			console.log('Received new message:', e);
 			if (e.message) {
-				console.log('Adding message to list:', e.message);
 				messages.value = [...messages.value, e.message];
 				scrollToBottom();
 			} else {
@@ -62,36 +52,52 @@
 		});
 	});
 
-	const scrollToBottom = () => {
-		nextTick(() => {
-			const container = document.querySelector(".messages-container");
-			if (container) {
-				container.scrollTop = container.scrollHeight;
-			}
-		});
-	};
-
 	const submitMessage = () => {
 		if (!form.message && !form.image_path) return;
 
 		form.post(window.route("msgs.store"), {
 			preserveScroll: true,
-			onSuccess: () => {
-				console.log("msg submitted successfully");
+			onSuccess: (...args) => { 
 				form.reset();
 				imagePreview.value = null;
 				uploadPath.value = null;
 			},
 		});
 	};
-
+	const scrollToBottom = () => {
+		console.log("aaaa")
+		const container = document.querySelector('.messages-container');
+		if (container) {
+			container.scrollTop = container.scrollHeight;
+		} else {
+			console.error('Messages container not found');
+		}
+	}
+	onMounted(() => {
+		nextTick(() => {
+			scrollToBottom();
+		});
+	});
 	watch(
 		messages,
 		() => {
-			scrollToBottom();
+			nextTick(() => {
+				scrollToBottom();
+			});
 		},
 		{ deep: true },
 	);
+	watch(
+		() => props.initialMessages,  // Watch prop change
+		(newMessages) => {
+			if (Array.isArray(newMessages)) {
+				messages.value = [...newMessages];
+			} else {
+				console.error('Invalid initialMessages prop:', newMessages);
+			}
+		}
+	);
+
 </script>
 
 <template>
