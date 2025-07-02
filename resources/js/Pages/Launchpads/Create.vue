@@ -1,11 +1,10 @@
 <script setup>
-	import { computed, ref } from "vue";
+	import { computed, ref, onMounted } from "vue";
 
 	import { useForm } from "@inertiajs/vue3";
 	import { useChainId } from "@wagmi/vue";
-	import { ComponentIcon } from "lucide-vue-next";
+	import { ChevronDown, CircleAlert, ImageIcon, Link, PenLine, Trash2 } from "lucide-vue-next";
 	import { parseEventLogs } from "viem";
-
 	import ChainSymbol from "@/Components/ChainSymbol.vue";
 	import CollapseTransition from "@/Components/CollapseTransition.vue";
 	import FormInput from "@/Components/FormInput.vue";
@@ -51,7 +50,10 @@
 			preserveState: true,
 			preserveScroll: true,
 		});
+			const navHeight = ref(90)
+	const navRef = ref(null)
 	const addLinks = ref(false);
+	const addBanner = ref(false);
 	const abi = computed(() => factory.value.factory_abi);
 	const contract = computed(() => factory.value.contract);
 	const state = useReactiveContractCall(abi, contract);
@@ -60,14 +62,35 @@
 		contract,
 		"getDeploymentFee",
 	);
+
+	const fileInput = ref(null)
+	const fileInputBanner = ref(null)
+
+	const logoError = ref(null)
+	const bannerError = ref(null)
+
+	const removeImage = () => {
+		form.logo_uri = null
+		logoError.value = null
+	}
+	const removeImageBanner = () => {
+		form.banner_uri = null
+		bannerError.value = null
+	}
+
 	const deploy = async () => {
-		if (form.logo_upload && !form.logo_path)
-			form.setError("logo_uri", "Logo is required");
-		if (!form.logo_upload && !form.logo_uri)
-			form.setError("logo_uri", "Logo is required");
-		if (!form.name) form.setError("name", "Token name is required");
-		if (!form.symbol) form.setError("symbol", "Token symbol is required");
-		if (!form.symbol) form.setError("symbol", "A description is required");
+		if (form.logo_upload && !form.logo_path) {
+		form.setError("logo_uri", "The photo is too large (max 15MB)");
+		}
+		if (!form.logo_upload && !form.logo_uri) {
+			form.setError("logo_uri", "The photo is too large (max 15MB)");
+		}
+		// if (!form.banner_uri) {
+		// 	form.setError("banner_uri", "The photo is too large (max 15MB)");
+		// }
+		if (!form.name) form.setError("name", "Error Message");
+		if (!form.symbol) form.setError("symbol", "Error Message");
+		if (!form.description) form.setError("description", "Error Message");
 		await state.call(
 			"deployBondingCurveSystem",
 			[form.name, form.symbol],
@@ -83,138 +106,288 @@
 		form.token = logs?.[0]?.args?.tokenAddress;
 		save();
 	};
+
+	const onFileChange = (e, type = 'logo') => {
+	const file = e.target.files[0];
+	if (file) {
+		if (type === 'logo' && file.size > 15 * 1024 * 1024) {
+			logoError.value = 'The photo is too large (max 15MB)';
+			return;
+		}
+		if (type === 'banner' && file.size > 30 * 1024 * 1024) {
+			bannerError.value = 'The banner is too large (max 30MB)';
+			return;
+		}
+		if (type === 'logo') logoError.value = null;
+		if (type === 'banner') bannerError.value = null;
+		const reader = new FileReader();
+		reader.onload = (event) => {
+			if (type === 'logo') form.logo_uri = event.target.result;
+			if (type === 'banner') form.banner_uri = event.target.result;
+		};
+		reader.readAsDataURL(file);
+	}
+	};
+
+	onMounted(() => {
+	if (navRef.value) {
+		navHeight.value = navRef.value.offsetHeight
+	}
+	})
 </script>
 <template>
 	<Head :title="`New Launchpad`" />
 	<AppLayout>
-		<div
-			class="card max-w-3xl w-full mb-6 mx-auto dark:bg-gray-850 sm:p-12 sm:!pt-6 h-full border-0 card-border">
-			<div class="card-body card-gutterless h-full">
-				<h3 class="mb-3 flex items-center gap-2">
-					<ComponentIcon class="w-7 h-7 stroke-[0.7] text-sky-400" />
-					{{ $t("Launch Meme Token") }}
+		<div class="flex flex-row gap-6 mx-36 my-10">
+			<div class="w-9/12 mb-6 mx-auto bg-black/50 p-10 h-full rounded-3xl border border-white/10">
+				<h3 class="mb-3 flex items-center gap-2 text-white font-normal text-3xl">
+					{{ $t("Create new coin") }}
 				</h3>
+				<p class="text-white/50 text-sm max-w-[220px] mb-6">
+					{{ $t("Choose carefully, these can't be changed once the coin is created") }}
+				</p>
 				<div class="grid gap-6">
-					<div class="border p-3 border-gray-650 bg-gray-750/50">
-						<h3 class="text-lg mb-4 !text-primary font-extralight">
-							{{ $t("Token Logo") }}
-						</h3>
-						<div class="gap-x-3 grid gap-3">
-							<FormInput
-								v-model="form.logo_uri"
-								:disabled="form.logo_upload"
-								placeholder="https://"
-								:error="form.errors.logo_uri"
-								:help="$t('Supports png, jpeg or svg')">
-								<template #label>
-									<div class="flex mb-3">
-										<span class="mr-3">
-											{{ $t("Logo") }}
-										</span>
-										<label
-											class="inline-flex items-center space-x-2">
-											<input
-												v-model="form.logo_upload"
-												class="form-switch h-5 w-10 rounded-full bg-slate-300 before:rounded-full before:bg-slate-50 checked:!bg-emerald-600 checked:before:bg-white dark:bg-navy-900 dark:before:bg-navy-300 dark:checked:before:bg-white"
-												type="checkbox" />
-											<span>
-												{{ $t("Upload to server") }}
-											</span>
-										</label>
-									</div>
-								</template>
-							</FormInput>
-							<template v-if="form.logo_upload">
-								<LogoInput
-									v-if="$page.props.s3"
-									v-model="form.logo_uri"
-									v-model:file="form.logo_path"
-									auto />
-								<LogoInputLocal
-									v-else
-									v-model="form.logo_uri"
-									v-model:file="form.logo_path" />
-							</template>
-							<img
-								v-else
-								class="w-12 h-12 my-auto rounded-full b-0"
-								:src="form.logo_uri ?? form.logo ?? fakeLogo" />
-						</div>
-						<p v-if="form.errors.logo" class="text-red-500 mt-2">
-							{{ form.errors.logo }}
-						</p>
-						<p v-else class="text-xs mt-2">
-							{{ $t("") }}
-						</p>
-					</div>
-					<FormInput
-						:label="$t('Name')"
+					<div class="flex flex-row gap-6">
+						<FormInput
+						:label="$t('Coin Name')"
 						v-model="form.name"
 						type="text"
-						:error="form.errors.name" />
+						:error="form.errors.name"
+						class="w-1/2"
+						placeholder="Name your coin" />
 
-					<FormInput
-						:label="$t('Symbol')"
+						<FormInput
+						:label="$t('Ticker')"
 						v-model="form.symbol"
 						type="text"
-						:error="form.errors.symbol" />
+						:error="form.errors.symbol"
+						class="w-1/2"
+						placeholder="Add a coin ticker (e.g. DOGE)" />
+					</div>
 					<div>
-						<FormLabel class="mb-2">
-							{{ $t("Description") }}
+						<FormLabel class="mb-2 flex items-center gap-1">
+							<span class="text-white">{{ $t("Description") }}</span>
+							<span class="text-white/50">{{ $t("(optional)") }}</span>
 						</FormLabel>
 						<FormTextArea :rows="3" v-model="form.description" />
 						<p
 							v-if="form.errors.description"
-							class="text-xs font-semibold text-red-500">
+							class="text-sm font-normal !text-red-500 mt-2">
 							{{ form.errors.description }}
 						</p>
 					</div>
-					<FormSwitch v-model="addLinks">
-						{{ $t("Add Project Links") }}
-					</FormSwitch>
+					<button class="flex items-center gap-1 text-white/50 text-sm" @click="addLinks = !addLinks">
+						<Link class="w-4 h-4 text-white" />
+						<span class="text-white">{{ $t("Add social links") }}</span>
+						<span class="text-white/50">{{ $t("(optional)") }}</span>
+						<ChevronDown class="w-4 h-4 text-white" :class="{ 'rotate-180': addLinks }" />
+					</button>
 					<CollapseTransition>
 						<div v-show="addLinks" class="grid gap-4">
-							<FormInput
+							<div class="flex flex-row gap-6">
+								<FormInput
 								:label="$t('Website')"
 								v-model="form.website"
 								type="text"
-								:error="form.errors.website" />
-							<FormInput
-								:label="$t('Twitter')"
+								:error="form.errors.website"
+								class="w-1/2"
+								placeholder="Add URL"
+								/>
+								<FormInput
+								:label="$t('X')"
 								v-model="form.twitter"
 								type="text"
-								:error="form.errors.twitter" />
-							<FormInput
-								:label="$t('Discord')"
-								v-model="form.discord"
-								type="text"
-								:error="form.errors.discord" />
-							<FormInput
+								:error="form.errors.twitter"
+								class="w-1/2" 
+								placeholder="Add URL"
+								/>
+							</div>
+							<div class="flex flex-row gap-6">
+								<FormInput
 								:label="$t('Telegram')"
 								v-model="form.telegram"
 								type="text"
-								:error="form.errors.telegram" />
+								:error="form.errors.telegram"
+								class="w-1/2" 
+								placeholder="Add URL"
+								/>
+								<div class="w-1/2"></div>
+							</div>
 						</div>
 					</CollapseTransition>
-
-					<div v-if="$page.props.auth.user" class="pt-5">
 						<div
-							class="flex flex-col sm:flex-row items-center gap-3 justify-end">
-							<TxStatus
-								class="w-full sm:w-[unset]"
-								:state="state" />
+							class="flex flex-col items-center justify-center border border-dashed border-gray-900 bg-black/40 rounded-2xl min-h-[355px] w-full mb-4 relative"
+						>
+							<template v-if="form.logo_uri">
+								<!-- Centered Image -->
+								<div class="flex justify-center items-center w-full h-full min-h-[352px]">
+									<img :src="form.logo_uri" class="w-[240px] h-[240px] mx-auto rounded-xl object-cover" />
+								</div>
+								<!-- Action Buttons (bottom right) -->
+								<div class="absolute bottom-4 right-6 flex gap-4 items-center">
+									<button
+										type="button"
+										class="text-gray-300 hover:text-orange-500 text-sm flex items-center gap-1"
+										@click="() => $refs.fileInput.click()"
+									>
+										Replace
+										<PenLine class="w-4 h-4" />
+									</button>
+									<button
+										type="button"
+										class="text-red-500 hover:text-red-700 text-sm flex items-center gap-1"
+										@click="removeImage"
+									>
+										Remove
+										<Trash2 class="w-4 h-4" />
+									</button>
+								</div>
+								<!-- Hidden file input for replace -->
+								<input
+									ref="fileInput"
+									type="file"
+									class="hidden"
+									@change="e => onFileChange(e, 'logo')"
+									accept="image/*,video/*"
+								/>
+							</template>
+							<template v-else>
+								<!-- (Your existing upload UI here) -->
+								<div class="mb-4">
+									<img src="/file-upload.svg" class="w-12 h-12 text-white mx-auto" />
+								</div>
+								<div class="text-white text-lg font-medium mb-1 text-center">
+									{{ $t('Select video or image to upload') }}
+								</div>
+								<div class="text-white/50 text-sm mb-4 text-center">
+									{{ $t('Or drag and drop it here') }}
+								</div>
+								<label class="inline-block">
+									<input
+										type="file"
+										class="hidden"
+										@change="e => onFileChange(e, 'logo')"
+										accept="image/*,video/*"
+									/>
+									<span class="bg-[#DA520024] border border-[#FFFFFF14] text-orange-500 px-6 py-2 rounded-lg cursor-pointer font-normal block text-center">
+										{{ $t('Select file') }}
+									</span>
+								</label>
+								<div v-if="form.errors.logo_uri" class="mt-4 bg-[#FF4A4D14] bg-opacity-80 text-[#FF4A4D] px-6 py-2 rounded-lg text-center text-base font-medium">
+									{{ form.errors.logo_uri }}
+								</div>
+							</template>
+						</div>
+						<div class="flex flex-row gap-12 text-white/80 text-sm mb-4">
+							<!-- Image requirements -->
+							<div>
+								<div class="font-medium text-white mb-1">Image</div>
+								<ul class="list-disc list-inside space-y-1 text-white/50">
+								<li>Max 15mb. "jpg", "gif" or "png" recommended</li>
+								<li>Min. 1000×1000px, 1:1 square recommended</li>
+								</ul>
+							</div>
+							<!-- Video requirements -->
+							<div>
+								<div class="font-medium text-white mb-1">Video</div>
+								<ul class="list-disc list-inside space-y-1 text-white/50">
+								<li>Max 30mb. "mp4" recommended</li>
+								<li>Video - 16:9 or 9:16, 1080p+ recommended</li>
+								</ul>
+							</div>
+						</div>
+						<hr class="border-t border-white/10 my-2" />
+					<button class="flex items-center gap-1 text-white/50 text-sm" @click="addBanner = !addBanner">
+						<ImageIcon class="w-4 h-4 text-white" />
+						<span class="text-white">{{ $t("Add banner") }}</span>
+						<span class="text-white/50">{{ $t("(optional)") }}</span>
+						<ChevronDown class="w-4 h-4 text-white" :class="{ 'rotate-180': addBanner }" />
+					</button>
+					<CollapseTransition>
+						<div v-show="addBanner">
+							<div
+							class="flex flex-col items-center justify-center border border-dashed border-gray-900 bg-black/40 rounded-2xl min-h-[355px] w-full mb-4 relative"
+						>
+							<template v-if="form.banner_uri">
+								<!-- Centered Banner Image -->
+								<div class="flex justify-center items-center w-full h-full min-h-[352px]">
+									<img :src="form.banner_uri" class="w-[240px] h-[240px] mx-auto rounded-xl object-cover" />
+								</div>
+								<!-- Action Buttons (bottom right) -->
+								<div class="absolute bottom-4 right-6 flex gap-4 items-center">
+									<button
+										type="button"
+										class="text-gray-300 hover:text-orange-500 text-sm flex items-center gap-1"
+										@click="() => $refs.fileInputBanner.click()"
+									>
+										Replace
+										<PenLine class="w-4 h-4" />
+									</button>
+									<button
+										type="button"
+										class="text-red-500 hover:text-red-700 text-sm flex items-center gap-1"
+										@click="removeImageBanner"
+									>
+										Remove
+										<Trash2 class="w-4 h-4" />
+									</button>
+								</div>
+								<!-- Hidden file input for replace -->
+								<input
+									ref="fileInputBanner"
+									type="file"
+									class="hidden"
+									@change="e => onFileChange(e, 'banner')"
+									accept="image/*,video/*"
+								/>
+							</template>
+							<template v-else>
+								<!-- Upload UI for Banner -->
+								<div class="mb-4">
+									<img src="/file-upload.svg" class="w-12 h-12 text-white mx-auto" />
+								</div>
+								<div class="text-white text-lg font-medium mb-1 text-center">
+									{{ $t('Select video or image to upload') }}
+								</div>
+								<div class="text-white/50 text-sm mb-4 text-center">
+									{{ $t('Or drag and drop it here') }}
+								</div>
+								<label class="inline-block">
+									<input
+										type="file"
+										class="hidden"
+										@change="e => onFileChange(e, 'banner')"
+										accept="image/*,video/*"
+									/>
+									<span class="bg-[#DA520024] border border-[#FFFFFF14] text-orange-500 px-6 py-2 rounded-lg cursor-pointer font-normal block text-center">
+										{{ $t('Select file') }}
+									</span>
+								</label>
+								<div v-if="form.errors.banner_uri" class="mt-4 bg-[#FF4A4D14] bg-opacity-80 text-[#FF4A4D] px-6 py-2 rounded-lg text-center text-base font-medium">
+									{{ form.errors.banner_uri }}
+								</div>
+							</template>
+						</div>
+						</div>
+					</CollapseTransition>
+					<hr class="border-t border-white/10 my-2" />
+					<span class="text-white/50 text-sm flex items-center gap-1">
+						<CircleAlert class="w-3 h-3 text-white" />
+						{{ $t("Coin data (social links, banner, etc) can only be added now, and can't be changed or edited after creation") }}
+					</span>
+
+					<div v-if="$page.props.auth.user">
+						<div class="flex flex-col sm:flex-row items-center gap-3 justify-start w-full">
 							<PrimaryButton
-								class="w-full sm:w-[unset]"
+								class="w-64 rounded-xl text-white"
 								@click="deploy"
 								:disabled="state.busy || form.processing">
 								<Loading
 									class="mr-2 -ml-1 inline-block w-5 h-5"
 									v-if="state.busy || form.processing" />
 								<span>
-									{{ $t("Deploy Launchpad") }}
-									{{ feesFormatted }}
+									{{ $t("Create") }}
 								</span>
-								<ChainSymbol class="ml-1" :chain-id="chainId" />
 							</PrimaryButton>
 						</div>
 					</div>
@@ -225,6 +398,42 @@
 						</div>
 					</div>
 				</div>
+			</div>
+			<div class="w-3/12 mb-6 mx-auto bg-black/50 p-10 h-full rounded-3xl border border-white/10 sticky top-0" :style="{ top: `calc(30px + ${navHeight}px)` }">
+				<!-- <div class="bg-black/60 rounded-2xl p-5 w-80 shadow-lg mx-auto border border-white/10"> -->
+					<h3 class="mb-3 flex items-center gap-2 text-white font-normal text-xl">
+						{{ $t("Preview") }}
+					</h3>
+					<div class="flex justify-center items-center relative mb-3 w-full h-64">
+						<template v-if="form.logo_uri">
+						<img
+								:src="form.logo_uri"
+								class="w-full h-full object-cover rounded-2xl mx-auto"
+								alt="Preview"
+							/>
+						</template>
+						<template v-else>
+							<div class="flex justify-center items-center w-full h-full">
+								<div class="flex justify-center items-center w-full h-full bg-black/40 rounded-2xl"></div>
+							</div>
+						</template>
+					</div>
+					<div class="text-white text-lg font-semibold leading-tight">
+						{{ form.name || '' }}
+					</div>
+					<div class="text-white/60 text-xs mb-2">
+						{{ form.symbol || '' }}
+					</div>
+					<div class="flex items-center justify-between text-xs text-white/60 mb-2">
+						<span>now</span>
+						<span>0</span>
+					</div>
+					<div class="flex items-center gap-2">
+						<span class="bg-orange-600 text-white text-xs px-2 py-1 rounded-lg font-bold">$0</span>
+						<div class="flex-1 h-1 bg-gray-700 rounded mx-2"></div>
+						<span class="text-xs text-white/40">ATH: $0</span>
+					</div>
+				<!-- </div> -->
 			</div>
 		</div>
 	</AppLayout>
