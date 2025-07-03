@@ -10,7 +10,7 @@
         useSignMessage,
     } from "@wagmi/vue";
     import axios from "axios";
-    import { ChevronDown, ChevronRight, Power } from "lucide-vue-next";
+    import { ChevronDown, ChevronRight, Power, User } from "lucide-vue-next";
     import { avalanche, avalancheFuji, blast, linea, sepolia } from "viem/chains";
 
     import DangerButton from "@/Components/DangerButton.vue";
@@ -158,21 +158,31 @@
                     </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent class="!bg-black/10 !border-white/20 text-white">
+                     <DropdownMenuItem
+                        @click="$inertia.visit('/profile')"
+                        class="cursor-pointer"
+                        >
+                        <span>Profile</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                        class="cursor-pointer"
+                        >
+                        <span>View wallet</span>
+                    </DropdownMenuItem>
                     <DropdownMenuItem @click="signOut" class="cursor-pointer">
-                        <Power class="w-4 h-4 mr-2" />
-                        <span>Disconnect</span>
+                        <span>Log out</span>
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
         </template>
-        <template v-else-if="isConnected">
+        <!-- <template v-else-if="isConnected">
             <SecondaryButton :size="size" :class="{ 'w-full': full }" @click="handleVerify">
                 Verify Signature
             </SecondaryButton>
             <DangerButton :size="size" :class="{ 'w-full': full }" @click="disconnect()">
                 Disconnect
             </DangerButton>
-        </template>
+        </template> -->
         <template v-else>
             <button :class="{ 'w-full': full }" @click="openConnectModal" 
             class="hidden md:flex items-center gap-2 border-white/20 text-white rounded-full px-5 py-4 font-medium text-sm" style="

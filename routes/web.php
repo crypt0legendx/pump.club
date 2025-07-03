@@ -26,13 +26,10 @@ Route::controller(S3Controller::class)
 
 
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/profile', [ProfileController::class, 'view'])->name('profile.view');
 });
 require __DIR__ . '/otp.php';
 require __DIR__ . '/web3.php';
-
 
 
 #launchpads
