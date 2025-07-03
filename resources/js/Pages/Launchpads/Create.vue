@@ -5,18 +5,13 @@
 	import { useChainId } from "@wagmi/vue";
 	import { ChevronDown, CircleAlert, ImageIcon, Link, PenLine, Trash2 } from "lucide-vue-next";
 	import { parseEventLogs } from "viem";
-	import ChainSymbol from "@/Components/ChainSymbol.vue";
 	import CollapseTransition from "@/Components/CollapseTransition.vue";
 	import FormInput from "@/Components/FormInput.vue";
 	import FormLabel from "@/Components/FormLabel.vue";
-	import FormSwitch from "@/Components/FormSwitch.vue";
 	import FormTextArea from "@/Components/FormTextArea.vue";
 	import Loading from "@/Components/Loading.vue";
-	import LogoInput from "@/Components/LogoInput.vue";
 	import LogoInputLocal from "@/Components/LogoInputLocal.vue";
-	import fakeLogo from "@/Components/no-image-available-icon.jpeg?url";
 	import PrimaryButton from "@/Components/PrimaryButton.vue";
-	import TxStatus from "@/Components/TxStatus.vue";
 	import {
 		useContractFees,
 		useReactiveContractCall,
@@ -43,15 +38,18 @@
 		website: "",
 		logo_uri: null,
 		logo_path: null,
-		logo_upload: false,
+		logo_upload: true,
 	});
 	const save = () =>
 		form.post(window.route("launchpads.store"), {
 			preserveState: true,
 			preserveScroll: true,
 		});
-			const navHeight = ref(90)
-	const navRef = ref(null)
+	
+	const navHeight = ref(90)
+	const navRef = ref(null);
+	const logoInputLocal = ref(null);
+	const logo_base64 = ref(null);
 	const addLinks = ref(false);
 	const addBanner = ref(false);
 	const abi = computed(() => factory.value.factory_abi);
@@ -63,21 +61,6 @@
 		"getDeploymentFee",
 	);
 
-	const fileInput = ref(null)
-	const fileInputBanner = ref(null)
-
-	const logoError = ref(null)
-	const bannerError = ref(null)
-
-	const removeImage = () => {
-		form.logo_uri = null
-		logoError.value = null
-	}
-	const removeImageBanner = () => {
-		form.banner_uri = null
-		bannerError.value = null
-	}
-
 	const deploy = async () => {
 		if (form.logo_upload && !form.logo_path) {
 		form.setError("logo_uri", "The photo is too large (max 15MB)");
@@ -85,9 +68,6 @@
 		if (!form.logo_upload && !form.logo_uri) {
 			form.setError("logo_uri", "The photo is too large (max 15MB)");
 		}
-		// if (!form.banner_uri) {
-		// 	form.setError("banner_uri", "The photo is too large (max 15MB)");
-		// }
 		if (!form.name) form.setError("name", "Error Message");
 		if (!form.symbol) form.setError("symbol", "Error Message");
 		if (!form.description) form.setError("description", "Error Message");
@@ -107,33 +87,23 @@
 		save();
 	};
 
-	const onFileChange = (e, type = 'logo') => {
-	const file = e.target.files[0];
-	if (file) {
-		if (type === 'logo' && file.size > 15 * 1024 * 1024) {
-			logoError.value = 'The photo is too large (max 15MB)';
-			return;
-		}
-		if (type === 'banner' && file.size > 30 * 1024 * 1024) {
-			bannerError.value = 'The banner is too large (max 30MB)';
-			return;
-		}
-		if (type === 'logo') logoError.value = null;
-		if (type === 'banner') bannerError.value = null;
-		const reader = new FileReader();
-		reader.onload = (event) => {
-			if (type === 'logo') form.logo_uri = event.target.result;
-			if (type === 'banner') form.banner_uri = event.target.result;
-		};
-		reader.readAsDataURL(file);
+	function openLogoFileDialog() {
+    logoInputLocal.value?.pond?.browse();
 	}
-	};
+
+	function removeImage() {
+    form.logo_uri = null;
+    form.logo_path = null;
+    logoInputLocal.value?.clear();
+	}
+
 
 	onMounted(() => {
 	if (navRef.value) {
 		navHeight.value = navRef.value.offsetHeight
 	}
 	})
+	
 </script>
 <template>
 	<Head :title="`New Launchpad`" />
@@ -215,20 +185,21 @@
 							</div>
 						</div>
 					</CollapseTransition>
-						<div
+							<div
 							class="flex flex-col items-center justify-center border border-dashed border-gray-900 bg-black/40 rounded-2xl min-h-[355px] w-full mb-4 relative"
 						>
-							<template v-if="form.logo_uri">
-								<!-- Centered Image -->
-								<div class="flex justify-center items-center w-full h-full min-h-[352px]">
-									<img :src="form.logo_uri" class="w-[240px] h-[240px] mx-auto rounded-xl object-cover" />
-								</div>
-								<!-- Action Buttons (bottom right) -->
-								<div class="absolute bottom-4 right-6 flex gap-4 items-center">
+						<LogoInputLocal
+							ref="logoInputLocal"
+							v-model="form.logo_uri"
+							v-model:file="form.logo_path" 
+							  @preview="logo_base64 = $event"
+							/>
+						<template v-if="form.logo_uri">
+							<div class="absolute bottom-4 right-6 flex gap-4 items-center">
 									<button
 										type="button"
-										class="text-gray-300 hover:text-orange-500 text-sm flex items-center gap-1"
-										@click="() => $refs.fileInput.click()"
+										class="text-gray-300 text-sm flex items-center gap-1"
+										@click="openLogoFileDialog"
 									>
 										Replace
 										<PenLine class="w-4 h-4" />
@@ -242,41 +213,7 @@
 										<Trash2 class="w-4 h-4" />
 									</button>
 								</div>
-								<!-- Hidden file input for replace -->
-								<input
-									ref="fileInput"
-									type="file"
-									class="hidden"
-									@change="e => onFileChange(e, 'logo')"
-									accept="image/*,video/*"
-								/>
-							</template>
-							<template v-else>
-								<!-- (Your existing upload UI here) -->
-								<div class="mb-4">
-									<img src="/file-upload.svg" class="w-12 h-12 text-white mx-auto" />
-								</div>
-								<div class="text-white text-lg font-medium mb-1 text-center">
-									{{ $t('Select video or image to upload') }}
-								</div>
-								<div class="text-white/50 text-sm mb-4 text-center">
-									{{ $t('Or drag and drop it here') }}
-								</div>
-								<label class="inline-block">
-									<input
-										type="file"
-										class="hidden"
-										@change="e => onFileChange(e, 'logo')"
-										accept="image/*,video/*"
-									/>
-									<span class="bg-[#DA520024] border border-[#FFFFFF14] text-orange-500 px-6 py-2 rounded-lg cursor-pointer font-normal block text-center">
-										{{ $t('Select file') }}
-									</span>
-								</label>
-								<div v-if="form.errors.logo_uri" class="mt-4 bg-[#FF4A4D14] bg-opacity-80 text-[#FF4A4D] px-6 py-2 rounded-lg text-center text-base font-medium">
-									{{ form.errors.logo_uri }}
-								</div>
-							</template>
+						</template>
 						</div>
 						<div class="flex flex-row gap-12 text-white/80 text-sm mb-4">
 							<!-- Image requirements -->
@@ -308,65 +245,7 @@
 							<div
 							class="flex flex-col items-center justify-center border border-dashed border-gray-900 bg-black/40 rounded-2xl min-h-[355px] w-full mb-4 relative"
 						>
-							<template v-if="form.banner_uri">
-								<!-- Centered Banner Image -->
-								<div class="flex justify-center items-center w-full h-full min-h-[352px]">
-									<img :src="form.banner_uri" class="w-[240px] h-[240px] mx-auto rounded-xl object-cover" />
-								</div>
-								<!-- Action Buttons (bottom right) -->
-								<div class="absolute bottom-4 right-6 flex gap-4 items-center">
-									<button
-										type="button"
-										class="text-gray-300 hover:text-orange-500 text-sm flex items-center gap-1"
-										@click="() => $refs.fileInputBanner.click()"
-									>
-										Replace
-										<PenLine class="w-4 h-4" />
-									</button>
-									<button
-										type="button"
-										class="text-red-500 hover:text-red-700 text-sm flex items-center gap-1"
-										@click="removeImageBanner"
-									>
-										Remove
-										<Trash2 class="w-4 h-4" />
-									</button>
-								</div>
-								<!-- Hidden file input for replace -->
-								<input
-									ref="fileInputBanner"
-									type="file"
-									class="hidden"
-									@change="e => onFileChange(e, 'banner')"
-									accept="image/*,video/*"
-								/>
-							</template>
-							<template v-else>
-								<!-- Upload UI for Banner -->
-								<div class="mb-4">
-									<img src="/file-upload.svg" class="w-12 h-12 text-white mx-auto" />
-								</div>
-								<div class="text-white text-lg font-medium mb-1 text-center">
-									{{ $t('Select video or image to upload') }}
-								</div>
-								<div class="text-white/50 text-sm mb-4 text-center">
-									{{ $t('Or drag and drop it here') }}
-								</div>
-								<label class="inline-block">
-									<input
-										type="file"
-										class="hidden"
-										@change="e => onFileChange(e, 'banner')"
-										accept="image/*,video/*"
-									/>
-									<span class="bg-[#DA520024] border border-[#FFFFFF14] text-orange-500 px-6 py-2 rounded-lg cursor-pointer font-normal block text-center">
-										{{ $t('Select file') }}
-									</span>
-								</label>
-								<div v-if="form.errors.banner_uri" class="mt-4 bg-[#FF4A4D14] bg-opacity-80 text-[#FF4A4D] px-6 py-2 rounded-lg text-center text-base font-medium">
-									{{ form.errors.banner_uri }}
-								</div>
-							</template>
+							
 						</div>
 						</div>
 					</CollapseTransition>
@@ -406,11 +285,12 @@
 					</h3>
 					<div class="flex justify-center items-center relative mb-3 w-full h-64">
 						<template v-if="form.logo_uri">
-						<img
-								:src="form.logo_uri"
+							<img
+								v-if="logo_base64"
+  								:src="logo_base64"
 								class="w-full h-full object-cover rounded-2xl mx-auto"
 								alt="Preview"
-							/>
+								/>
 						</template>
 						<template v-else>
 							<div class="flex justify-center items-center w-full h-full">
