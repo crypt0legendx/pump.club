@@ -164,11 +164,6 @@
                         >
                         <span>Profile</span>
                     </DropdownMenuItem>
-                    <DropdownMenuItem
-                        class="cursor-pointer"
-                        >
-                        <span>View wallet</span>
-                    </DropdownMenuItem>
                     <DropdownMenuItem @click="signOut" class="cursor-pointer">
                         <span>Log out</span>
                     </DropdownMenuItem>
