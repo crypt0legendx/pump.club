@@ -120,6 +120,7 @@ const handleProcessFile = (error, file) => {
     top: calc(50% - 1em);
 }
 
+/* Make the FilePond component larger */
 .filepond.filepond--root {
     min-height: 200px;
     max-height: 300px;
@@ -138,6 +139,9 @@ const handleProcessFile = (error, file) => {
     display: flex;
     align-items: center;
     justify-content: center;
+    text-align: center;
+    width: 100%;
+    height: 100%;
 }
 
 .filepond--file-info {
@@ -151,6 +155,7 @@ const handleProcessFile = (error, file) => {
     max-width: 400px;
 }
 
+/* Remove dotted border */
 .filepond--panel-root {
     border: none !important;
     outline: none !important;
@@ -175,14 +180,17 @@ const handleProcessFile = (error, file) => {
     justify-content: center;
     border: 1.5px dashed #fff2;
     box-shadow: 0 2px 16px #0004;
+    position: relative;
 }
 
 .upload-area-inner {
-    margin-top: 210px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    height: 100%;
+    width: 100%;
+    text-align: center;
 }
 
 .upload-area-inner svg {

@@ -4,7 +4,7 @@
 </script>
 
 <template>
-	<footer class=" text-gray-400 py-12 footer-layout border-t border-white/10">
+	<footer class=" text-gray-400 py-20 footer-layout border-t border-white/10">
 		<div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
 			<div class="flex justify-center mb-4">
 				<Link href="/">
