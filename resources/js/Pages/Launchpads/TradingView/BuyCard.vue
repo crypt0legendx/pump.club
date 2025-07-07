@@ -234,6 +234,10 @@
 		if (amount.value > max) return max;
 		return null;
 	});
+
+	const visibleTabs = computed(() =>
+		info.currentPhase === 0 ? tabs.filter(tab => tab.name === 'buy') : tabs
+	);
 </script>
 
 <template>
@@ -249,9 +253,9 @@
 				</h3>
 				<div class="flex bg-white/10 rounded-full p-1 gap-1 w-full">
 					<button
-						v-for="tab in tabs"
+						v-for="tab in visibleTabs"
 						:key="tab.name"
-						@click="activeTab = tab.name, setType(tab.name)"
+						@click="activeTab = tab.name; setType(tab.name)"
 						:class="[
 							'px-7 py-2 text-base font-normal focus:outline-none transition-all rounded-full capitalize w-full',
 							activeTab === tab.name
