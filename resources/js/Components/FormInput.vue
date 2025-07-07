@@ -109,12 +109,12 @@
 				@focus="$emit('focused', $event)"
 				@keyup="$emit('onKeyUp', $event)"
 				:type="type ? type : hide ? 'password' : 'text'"
-				class="border block w-full focus:outline-none appearance-none transition-colors duration-300 disabled:dark:bg-gray-750"
+				class="block w-full focus:outline-none appearance-none transition-colors duration-300 disabled:dark:bg-gray-750"
 				:class="[
 					{ 'cursor-pointer': readonly },
 					error
-						? 'bg-red-50 border-red-500  text-red-900 placeholder-red-700 rounded-full focus:ring-red-500 focus:border-red-500  dark:bg-red-100 dark:border-red-400'
-						: 'bg-white border-gray-300 text-gray-900  rounded-full dark:bg-white/10 dark:border-white/10 dark:placeholder-gray-400 dark:text-white',
+						? 'bg-red-50 text-red-900 placeholder-red-700 rounded-lg dark:bg-red-100'
+						: 'bg-white text-gray-900 rounded-lg dark:bg-white/10 dark:border-white/10 dark:placeholder-gray-400 dark:text-white',
 					classes,
 					...(Array.isArray(inputClasses)
 						? inputClasses

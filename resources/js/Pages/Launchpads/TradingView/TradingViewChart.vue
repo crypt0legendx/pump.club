@@ -34,14 +34,14 @@
 			theme: "Dark",
 			custom_css_url: "/tradingview.css",
 			overrides: {
-				"paneProperties.backgroundType": "solid",
-				"paneProperties.background": "#262626",
+				"paneProperties.backgroundType": "#15161b",
+				"paneProperties.background": "#15171b",
 				// Grid lines - using gray-750 (#333333) for subtle contrast
 				"paneProperties.vertGridProperties.color": "#333333",
 				"paneProperties.horzGridProperties.color": "#333333",
 				// Scales - using various gray shades
-				"scalesProperties.backgroundColor": "#262626", // gray-800
-				"scalesProperties.lineColor": "#333333", // gray-750
+				"scalesProperties.backgroundColor": "#15161b", // gray-800
+				"scalesProperties.lineColor": "#15161b", // gray-750
 				"scalesProperties.textColor": "#8b8b8b", // gray-450
 				// Crosshair - using gray-550
 				"crossHairProperties.color": "#636363",
@@ -231,6 +231,6 @@
 </script>
 <template>
 	<div class="relative">
-		<div id="tv_chart_container" class="w-full h-[400px]"></div>
+		<div id="tv_chart_container" class="w-full h-[400px] rounded-2xl overflow-hidden"></div>
 	</div>
 </template>

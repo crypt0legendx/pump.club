@@ -18,8 +18,12 @@
 	} from "@/hooks/useContractCall";
 	import AppLayout from "@/Layouts/AppLayout.vue";
 	import Web3Auth from "@/Pages/Auth/Web3Auth.vue";
+	import BarButton from "@/Pages/Launchpads/BarButton.vue";
+	import { Carousel, CarouselContent, CarouselItem } from "@/Components/ui/carousel";
+
 	const props = defineProps({
 		factories: Array,
+		top: Array,
 	});
 	const chainId = useChainId();
 	const factory = computed(() => props.factories[chainId.value]);
@@ -108,7 +112,26 @@
 </script>
 <template>
 	<Head :title="`New Launchpad`" />
-	<AppLayout>
+	<AppLayout compact>
+		<template #header>
+            <div class="hidden md:flex items-center w-full bg-black relative bg-black/10" :style="{ paddingTop: `calc(10px + ${navHeight}px)` }">
+                <div class="flex w-full items-center">
+                    <div class="flex w-full items-center">
+                    <Carousel class="w-full" :opts="{ align: 'start' }">
+                        <CarouselContent>
+							<CarouselItem
+								v-for="(launch, i) in top"
+								:key="launch.id"
+								class="!basis-auto"
+							>
+								<BarButton :launch="launch" :active="i === 0" />
+							</CarouselItem>
+                        </CarouselContent>
+                    </Carousel>
+                    </div>
+                </div>
+                </div>
+        </template>
 		<div class="flex flex-col md:flex-row gap-6 mx-2 md:mx-5 lg:mx-24 xl:mx-36 md:my-10 my-0">
 			<div class="lg:w-9/12 w-full md:w-7/12 mb-6 mx-auto md:bg-black/50 bg-transparent md:p-10 p-5 h-full rounded-3xl">
 				<h3 class="mb-3 flex items-center gap-2 text-white font-normal text-3xl">

@@ -101,7 +101,7 @@
 </script>
 
 <template>
-	<div class="flex flex-col h-[800px] bg-gray-850 p-4 rounded-lg shadow">
+	<div class="flex flex-col h-[800px] bg-white/10 p-4 rounded-lg shadow">
 		<!-- Messages Container -->
 		<div
 			v-if="messages.length == 0"
@@ -125,7 +125,7 @@
 					:class="{
 						'bg-blue-100 dark:bg-blue-900':
 							message.user_id === $page.props.auth.user?.id,
-						'bg-gray-100 dark:bg-gray-750':
+						'bg-white/10':
 							message.user_id !== $page.props.auth.user?.id,
 					}"
 					class="rounded-lg p-3">
@@ -171,10 +171,9 @@
 							size="md"
 							placeholder="Type your message..."></FormInput>
 					</div>
-
-					<BaseButton v-if="$page.props.auth.user">
-						<PaperAirplaneIcon class="w-6 h-6" />
-					</BaseButton>
+					<button v-if="$page.props.auth.user" class="bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow rounded-full px-3 py-3 text-base font-normal focus:outline-none transition-all">
+						<PaperAirplaneIcon class="w-6 h-6 text-white" />
+					</button>
 					<Web3Auth size="md" v-else />
 				</div>
 			</form>

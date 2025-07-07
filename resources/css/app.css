@@ -445,3 +445,11 @@
 	background: radial-gradient(ellipse 40% 40% at 50% 100%, rgba(218, 80, 0, 0.26) 0%, rgba(0, 0, 0, 0) 100%) no-repeat, black;
 
 }
+
+::-webkit-scrollbar {
+	display: none;
+}
+
+#scrollbar>div {
+	display: flex !important;
+}

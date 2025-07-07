@@ -253,7 +253,7 @@ onMounted(() => {
 <template>
     <AppLayout compact>
         <template #header>
-            <div class="hidden md:flex items-center w-full bg-black relative bg-black/10 pt-[calc(100vh-90px)]" :style="{ paddingTop: `calc(10px + ${navHeight}px)` }">
+            <div class="hidden md:flex items-center w-full bg-black relative bg-black/10" :style="{ paddingTop: `calc(10px + ${navHeight}px)` }">
                 <div class="flex w-full items-center">
                     <div class="flex w-full items-center">
                     <Carousel class="w-full" :opts="{ align: 'start' }">

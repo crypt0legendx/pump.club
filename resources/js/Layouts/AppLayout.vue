@@ -31,7 +31,7 @@ onMounted(() => {
 		<TopNav />
 		<slot name="header" />
 		<!-- Main Content -->
-		<main class="min-h-[calc(100vh-4rem)]" :style="{ paddingTop: `calc(10px + ${navHeight}px)` }">
+		<main class="min-h-[calc(100vh-4rem)]">
 			<!-- Main Content Area -->
 			<div class="mx-auto">
 				<slot></slot>

@@ -19,6 +19,11 @@
 	import NetworkIcon from "@/Icons/NetworkIcon.vue";
 	import ArrowLeftRight from "@/Pages/Launchpads/TradingView/ArrowLeftRight.vue";
 
+	const tabs = [
+    { name: "buy" },
+    { name: "sell" },
+	];
+	const activeTab = ref("buy");
 	const slippage = ref(false);
 	const props = defineProps({
 		launchpad: Object,
@@ -235,27 +240,28 @@
 	<div class="w-full grid gap-4">
 		<div
 			v-if="info.currentPhase < 2"
-			class="bg-gray-800 p-4 rounded-lg border border-none text-gray-400 grid gap-4">
-			<div class="grid grid-cols-2 gap-2 mb-2">
-				<BaseButton
-					@click="setType('buy')"
-					size="xs"
-					:secondary="tradeType != 'buy'">
-					{{ $t("BUY") }}
-				</BaseButton>
-				<BaseButton
-					@click="setType('sell')"
-					v-if="info.currentPhase == 1"
-					size="xs"
-					:danger="tradeType == 'sell'"
-					:secondary="tradeType != 'sell'">
-					{{ $t("SELL") }}
-				</BaseButton>
+			class="rounded-lg border border-none text-gray-400 grid gap-4">
+			<div class="flex items-center justify-between gap-2 mb-2">
 				<h3
 					class="text-xl font-extralight ml-4"
 					v-if="info.currentPhase == 0">
 					{{ $t("Prebond") }}
 				</h3>
+				<div class="flex bg-white/10 rounded-full p-1 gap-1 w-full">
+					<button
+						v-for="tab in tabs"
+						:key="tab.name"
+						@click="activeTab = tab.name, setType(tab.name)"
+						:class="[
+							'px-7 py-2 text-base font-normal focus:outline-none transition-all rounded-full capitalize w-full',
+							activeTab === tab.name
+								? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow rounded-full'
+								: 'bg-transparent text-gray-400 rounded-full hover:text-white'
+						]"
+					>
+						{{ tab.name }}
+					</button>
+				</div>
 			</div>
 
 			<div v-show="!slippage" class="flex flex-col">
@@ -263,7 +269,7 @@
 					v-if="useTokenInput"
 					size="sm"
 					v-model="tokens"
-					input-classes="!pl-24">
+					input-classes="!pl-24 rounded-lg">
 					<template #lead>
 						<div
 							v-if="useTokenInput"
@@ -306,7 +312,7 @@
 					size="sm"
 					v-model="amount"
 					:error="maxPrebond ? `Max is ${maxPrebond}` : ''"
-					input-classes="!pl-24">
+					input-classes="!pl-24 rounded-lg">
 					<template #lead>
 						<div
 							v-if="useTokenInput"
@@ -354,41 +360,46 @@
 				</FormInput>
 				<div
 					v-if="useTokenInput && tradeType === 'sell'"
-					class="flex items-center gap-1 mt-2 bg-gray-800 p-1 rounded-lg">
+					class="flex items-center gap-1 mt-2 p-1 rounded-lg">
 					<BaseButton
+						class="text-base font-normal focus:outline-none transition-all bg-transparent text-gray-400 rounded-lg hover:text-white bg-white/10"
 						@click="tokens = 0"
 						size="xss"
-						outlined
 						icon-mode
 						secondary>
 						<X
 							class="w-4 h-4 hover:rotate-90 hover:text-red-500 transition-all duration-300" />
 					</BaseButton>
 					<BaseButton
+						class="text-base font-normal focus:outline-none transition-all bg-transparent text-gray-400 rounded-lg hover:text-white bg-white/10"
 						@click="tokens = info.balance"
 						size="xss"
 						secondary>
 						BAL
 					</BaseButton>
 					<BaseButton
+						class="text-base font-normal focus:outline-none transition-all bg-transparent text-gray-400 rounded-lg hover:text-white bg-white/10"
 						@click="tokens = info.balance * 0.1"
 						size="xss"
 						secondary>
 						10%
 					</BaseButton>
 					<BaseButton
+						class="text-base font-normal focus:outline-none transition-all bg-transparent text-gray-400 rounded-lg hover:text-white bg-white/10"
 						@click="tokens = info.balance * 0.25"
 						size="xss"
 						secondary>
 						25%
 					</BaseButton>
 					<BaseButton
+						class="text-base font-normal focus:outline-none transition-all bg-transparent text-gray-400 rounded-lg hover:text-white bg-white/10"
 						@click="tokens = info.balance * 0.5"
 						size="xss"
 						secondary>
 						50%
 					</BaseButton>
 					<BaseButton
+						class="text-base font-normal focus:outline-none transition-all bg-transparent text-gray-400 rounded-lg hover:text-white bg-white/10"
 						@click="tokens = info.balance * 0.75"
 						size="xss"
 						secondary>
@@ -397,33 +408,41 @@
 				</div>
 				<div
 					v-else
-					class="flex items-center gap-1 mt-2 bg-gray-800 p-1 rounded-lg">
+					class="flex items-center gap-1 mt-2 p-1 rounded-lg">
 					<BaseButton
+						class="text-base font-normal focus:outline-none transition-all bg-transparent text-gray-400 rounded-lg hover:text-white bg-white/10"
 						@click="amount = 0"
 						size="xss"
-						outlined
 						secondary>
 						{{ $t("RESET") }}
 					</BaseButton>
-					<BaseButton @click="amount = 0.1" size="xss" secondary>
+					<BaseButton 
+					class="text-base font-normal focus:outline-none transition-all bg-transparent text-gray-400 rounded-lg hover:text-white bg-white/10"
+					@click="amount = 0.1" size="xss" secondary>
 						0.1
 						<ChainSymbol
 							class="ml-1"
 							:chainId="launchpad.chainId" />
 					</BaseButton>
-					<BaseButton @click="amount = 0.5" size="xss" secondary>
+					<BaseButton 
+					class="text-base font-normal focus:outline-none transition-all bg-transparent text-gray-400 rounded-lg hover:text-white bg-white/10"
+					@click="amount = 0.5" size="xss" secondary>
 						0.5
 						<ChainSymbol
 							class="ml-1"
 							:chainId="launchpad.chainId" />
 					</BaseButton>
-					<BaseButton @click="amount = 1" size="xss" secondary>
+					<BaseButton 
+					class="text-base font-normal focus:outline-none transition-all bg-transparent text-gray-400 rounded-lg hover:text-white bg-white/10"
+					@click="amount = 1" size="xss" secondary>
 						1
 						<ChainSymbol
 							class="ml-1"
 							:chainId="launchpad.chainId" />
 					</BaseButton>
-					<BaseButton @click="amount = 3" size="xss" secondary>
+					<BaseButton 
+					class="text-base font-normal focus:outline-none transition-all bg-transparent text-gray-400 rounded-lg hover:text-white bg-white/10"
+					@click="amount = 3" size="xss" secondary>
 						3
 						<ChainSymbol
 							class="ml-1"
@@ -519,11 +538,15 @@
 					:amount="parseEther(`${tokens}`)"
 					shouldApprove
 					v-if="tradeType == 'sell'">
-					<BaseButton class="w-full" @click="swap" danger>
-						{{ $t("Place trade") }}
+					<BaseButton
+					class="bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow rounded-full px-7 py-2 text-base font-normal focus:outline-none transition-all"
+					@click="swap" danger>
+					{{ $t("Place trade") }}
 					</BaseButton>
 				</ApproveTokenButton>
-				<BaseButton @click="swap" v-else>
+				<BaseButton 
+				class="bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow rounded-full px-7 py-2 text-base font-normal focus:outline-none transition-all"
+				@click="swap" v-else>
 					{{ $t("Place trade") }}
 				</BaseButton>
 			</div>
@@ -551,7 +574,7 @@
 		</div>
 		<div
 			v-if="info.contributions > 0 && info.tokenLocks"
-			class="bg-gray-800 p-4 text-center rounded-lg border border-none text-gray-400 grid gap-4">
+			class="bg-white/10 p-4 text-center rounded-lg border border-none text-gray-400 grid gap-4">
 			<h3 class="text-lg font-medium flex justify-center items-center">
 				<Vault class="w-5 h-5 mr-2 inline-flex" />
 				{{ $t("Prebond Purchase") }}
@@ -563,7 +586,9 @@
 			<TxStatus
 				v-if="state.called === 'withdrawTokenAllocation'"
 				:state="state" />
-			<BaseButton secondary outlined @click="withdrawPrebond">
+			<BaseButton 
+			class="border border-white/10 bg-white/10 text-white shadow rounded-full px-7 py-2 text-base font-normal hover:bg-white/20 hover:text-white"
+			@click="withdrawPrebond">
 				{{ $t("Withdraw Prebond Allocation") }}
 			</BaseButton>
 		</div>
