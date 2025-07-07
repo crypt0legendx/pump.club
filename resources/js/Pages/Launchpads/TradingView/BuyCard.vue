@@ -241,9 +241,9 @@
 		<div
 			v-if="info.currentPhase < 2"
 			class="rounded-lg border border-none text-gray-400 grid gap-4">
-			<div class="flex items-center justify-between gap-2 mb-2">
+			<div class="flex flex-col items-center justify-between gap-2 mb-2">
 				<h3
-					class="text-xl font-extralight ml-4"
+					class="text-xl font-extralight"
 					v-if="info.currentPhase == 0">
 					{{ $t("Prebond") }}
 				</h3>
