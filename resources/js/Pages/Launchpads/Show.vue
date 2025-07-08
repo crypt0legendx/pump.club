@@ -63,10 +63,10 @@ onMounted(() => {
                 </div>
                 </div>
         </template>
-        <div class="flex flex-col md:flex-row gap-6 mx-2 md:mx-5 lg:mx-24 xl:mx-36 md:my-10 my-0">
-			<div class="lg:w-8/12 w-full md:w-7/12 mb-6 mx-auto md:bg-black/50 bg-transparent md:p-7 p-5 h-full rounded-3xl">
-                <div class="flex flex-col gap-2 w-full px-4 md:px-0">
-                    <div class="flex flex-col gap-2 w-full px-4 md:px-0">
+        <div class="flex flex-col md:flex-row gap-6 mx-2 md:mx-5 lg:mx-24 xl:mx-36 md:my-10 my-0 pt-24 md:pt-4">
+			<div class="lg:w-8/12 w-full md:w-7/12 mb-6 mx-auto md:bg-black/50 bg-transparent md:p-7 p-2 h-full rounded-3xl">
+                <div class="flex flex-col gap-2 w-full">
+                    <div class="flex flex-col gap-2 w-full">
                         <div class="flex flex-col justify-between w-full py-2 gap-4">
                             <div class="flex flex-row justify-between items-center gap-4">
                                 <Link href="/" class="flex items-center text-white hover:text-gray-300 focus:outline-none">
@@ -74,13 +74,13 @@ onMounted(() => {
                                     Back
                                 </Link>
                             </div>
-                            <div class="flex flex-row items-center justify-between gap-6 text-gray-300 text-sm">
+                            <div class="flex flex-col md:flex-row items-center justify-between gap-6 text-gray-300 text-sm w-full">
                                 <div class="flex flex-row items-center gap-4">
                                     <span class="text-white font-semibold leading-tight">{{ launchpad.name }}</span>
-                                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="avatar" class="w-8 h-8 rounded-full object-cover" />
+                                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="avatar" class="md:w-8 md:h-8 w-12 h-12 rounded-full object-cover" />
                                     <span class="text-gray-400 text-xs leading-tight">{{ shortenAddress(launchpad.user.address) }}</span>
                                 </div>
-                                <div class="flex flex-row items-center gap-4 text-gray-400">
+                                <div class="flex flex-row justify-between items-center gap-4 text-gray-400">
                                     <span>{{ launchpad.createdAgo }}</span>
                                     <span>market cap: ${{ launchpad.marketCap ?? 0 }}</span>
                                     <span>replies: {{ launchpad.msg_count ?? 0 }}</span>
@@ -93,13 +93,13 @@ onMounted(() => {
                         <TradingViewChart :launchpad="launchpad" />
                     </div>
                     <div class="flex h-fit mt-6">
-                        <div class="flex bg-white/10 rounded-full p-1 gap-1 w-fit">
+                        <div class="flex justify-between bg-white/10 rounded-full p-1 gap-1 overflow-x-auto w-full md:w-fit">
                             <button
                                 v-for="tab in tabs"
                                 :key="tab.name"
                                 @click="activeTab = tab.name"
                                 :class="[
-                                    'px-7 py-2 text-base font-normal focus:outline-none transition-all',
+                                    'md:px-7 px-2 py-2 text-sm md:text-base font-normal focus:outline-none transition-all',
                                     activeTab === tab.name
                                         ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow rounded-full'
                                         : 'bg-transparent text-gray-400 rounded-full hover:text-white'
@@ -138,7 +138,7 @@ onMounted(() => {
                     </div>
                 </div>
             </div>
-            <div class="lg:w-4/12 w-full md:w-5/12 mb-6 mx-auto md:bg-black/50 bg-transparent md:p-7 p-5 h-full rounded-3xl">
+            <div class="lg:w-4/12 w-full md:w-5/12 mb-6 mx-auto md:bg-black/50 bg-transparent md:p-7 p-2 h-full rounded-3xl">
                 <div class="flex flex-col items-center md:items-start md:flex-row gap-8 mt-4 md:justify-center">
                     <div class="grid mb-12 gap-4 w-full">
                         <BuyCard :launchpad="launchpad" />

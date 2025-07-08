@@ -8,6 +8,7 @@ import { shortenAddress } from '@/lib/wagmi';
 import { Camera, Copy, X } from 'lucide-vue-next';
 import CreatorRewardsCard from '@/Components/CreatorRewardsCard.vue';
 import Pagination from "@/Components/ui/pagination/Pagination.vue";
+import { ScrollArea, ScrollBar } from '@/Components/ui/scroll-area';
 
 const user = {
   username: '@kevin_91',
@@ -152,16 +153,19 @@ const stats = [
 					<!-- Tabs using shadcn-vue -->
 				</div>
         <Tabs default-value="balances" class="w-full mt-8">
-          <TabsList class="flex items-center justify-start border-b border-white/10 bg-transparent px-0 mb-4 overflow-x-auto overflow-y-hidden whitespace-nowrap">
-            <TabsTrigger
-              v-for="tab in tabList"
-              :key="tab.value"
-              :value="tab.value"
-              class="pb-2 mr-5 text-white/60 font-normal border-b border-transparent data-[state=active]:text-white data-[state=active]:border-orange-500"
-            >
-              {{ tab.label }}
-            </TabsTrigger>
-          </TabsList>
+          <ScrollArea class="w-full overflow-x-hidden">
+              <TabsList class="flex items-center justify-start border-b border-white/10 bg-transparent px-0 mb-2 w-full min-w-[700px]">
+              <TabsTrigger
+                v-for="tab in tabList"
+                :key="tab.value"
+                :value="tab.value"
+                class="pb-2 mr-5 text-white/60 font-normal border-b border-transparent data-[state=active]:text-white data-[state=active]:border-orange-500"
+              >
+                {{ tab.label }}
+              </TabsTrigger>
+            </TabsList>
+            <ScrollBar orientation="horizontal" />
+          </ScrollArea>
           <TabsContent value="balances" class="mt-4">
             <div v-for="bal in user.balances" :key="bal.name" class="flex items-center justify-between bg-black/30 px-2 md:px-6 py-3 border-b border-white/10 last:border-b-0">
               <div class="flex items-center gap-3">
