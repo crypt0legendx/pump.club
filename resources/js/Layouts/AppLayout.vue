@@ -24,14 +24,14 @@ onMounted(() => {
 
 </script>
 <template>
-	<div class="min-h-screen bg-black relative home-bg" >	
+	<div class="bg-black relative home-bg" >	
 		<!-- Flash Messages Component (Will be created next) -->
 		<FlashMessages />
 		<!-- Top Navigation (Will be created next) -->
 		<TopNav />
 		<slot name="header" />
 		<!-- Main Content -->
-		<main class="min-h-[calc(100vh-4rem)]">
+		<main>
 			<!-- Main Content Area -->
 			<div class="mx-auto">
 				<slot></slot>

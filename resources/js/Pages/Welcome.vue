@@ -271,7 +271,7 @@ onMounted(() => {
                 </div>
                 </div>
         </template>
-        <div class="grid my-4 lg:my-8 mx-5 lg:mx-10">
+        <div class="flex flex-col md:grid mx-5 lg:mx-10 pt-24 md:pt-4 pb-12">
             <div v-if="type === 'mine'" class="flex flex-col justify-center">
                 <h3 class="flex items-center">
                     <LoaderCircle v-if="launchpadsInfo.loading.value" class="w-6 h-6 mr-2 animate-spin" />
@@ -411,29 +411,39 @@ onMounted(() => {
                         <!-- </div> -->
                     </template>
                 </div>
-                <div>
+                <div class="">
                     <template v-if="selectedTab === 'watchlist'">
                         <div class="flex items-center gap-4 mb-8">
-                            <button
-                                v-for="list in lists"
-                                :key="list.name"
-                                :class="[
-                                    'px-4 md:px-8 py-2 md:py-4 text-sm font-medium rounded-full',
-                                    selectedList === list.name 
-                                        ? 'text-white bg-gray-800/50 border border-zinc-700/50' 
-                                        : 'text-gray-500 bg-gray-800/50 border border-zinc-700/50'
-                                ]"
-                                @click="selectedList = list.name"
-                            >
-                                {{ list.name }}
-                            </button>
-                            <button
-                                class="px-4 md:px-8 py-2 md:py-4 text-sm font-medium text-gray-500 bg-gray-800/50 border border-zinc-700/50 rounded-full flex items-center gap-1"
-                                @click="showAddModal = true"
-                            >
-                                Add
-                                <Plus class="w-4 h-4" />
-                            </button>
+                            <Carousel class="w-full" :opts="{ align: 'start' }">
+                                <CarouselContent>
+                                    <CarouselItem
+                                        v-for="list in lists"
+                                        :key="list.name"
+                                        class="!basis-auto"
+                                    >
+                                        <button
+                                            :class="[
+                                                'px-4 md:px-8 py-2 md:py-4 text-sm font-medium rounded-full whitespace-nowrap',
+                                                selectedList === list.name 
+                                                    ? 'text-white bg-gray-800/50 border border-zinc-700/50' 
+                                                    : 'text-gray-500 bg-gray-800/50 border border-zinc-700/50'
+                                            ]"
+                                            @click="selectedList = list.name"
+                                        >
+                                            {{ list.name }}
+                                        </button>
+                                    </CarouselItem>
+                                    <CarouselItem class="!basis-auto">
+                                        <button
+                                            class="px-4 md:px-8 py-2 md:py-4 text-sm font-medium text-gray-500 bg-gray-800/50 border border-zinc-700/50 rounded-full flex items-center gap-1 whitespace-nowrap"
+                                            @click="showAddModal = true"
+                                        >
+                                            Add
+                                            <Plus class="w-4 h-4" />
+                                        </button>
+                                    </CarouselItem>
+                                </CarouselContent>
+                            </Carousel>
                         </div>
                         <template v-if="watchedLaunchpads.length > 0">
                             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
@@ -471,7 +481,7 @@ onMounted(() => {
         </div>
     </AppLayout>
     <template v-if="showAddModal">
-        <div class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/50">
+        <div class="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-gray-900/50">
             <div class="bg-gray-900 rounded-2xl p-10 w-full max-w-fit relative shadow-xl border border-white/10">
                 <button class="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl" @click="showAddModal = false">&times;</button>
                 <h2 class="text-3xl font-normal text-white text-center mb-2">Manage lists</h2>

@@ -1,8 +1,8 @@
 <script setup>
+import { onMounted, ref, computed } from 'vue';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/Components/ui/tabs';
 import { Head } from '@inertiajs/vue3';
 import AppLayout from '@/Layouts/AppLayout.vue';
-import { ref, computed } from 'vue';
 import { useAccount } from '@wagmi/vue';
 import { shortenAddress } from '@/lib/wagmi';
 import { Camera, Copy, X } from 'lucide-vue-next';
@@ -93,12 +93,21 @@ function onPageChange(page) {
   currentPage.value = page;
 }
 
+const navHeight = ref(90)
+const navRef = ref(null)
+
+onMounted(() => {
+  if (navRef.value) {
+    navHeight.value = navRef.value.offsetHeight
+  }
+})
+
 </script>
 
 <template>
     <Head title="Profile" />
-    <AppLayout>
-		<div class="flex gap-8 max-w-7xl mx-auto py-10">
+    <AppLayout compact>
+		<div class="flex gap-8 max-w-7xl mx-auto py-10" :style="{ paddingTop: `calc(50px + ${navHeight}px)` }">
 			<!-- Left: Profile & Tabs -->
 			<div class="w-8/12">
 				<div class="bg-black/50 rounded-3xl border border-white/10 p-10 mb-6">

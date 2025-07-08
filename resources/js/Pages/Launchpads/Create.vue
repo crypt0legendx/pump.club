@@ -132,7 +132,7 @@
                 </div>
                 </div>
         </template>
-		<div class="flex flex-col md:flex-row gap-6 mx-2 md:mx-5 lg:mx-24 xl:mx-36 md:my-10 my-0">
+		<div class="flex flex-col md:flex-row gap-6 mx-2 md:mx-5 lg:mx-24 xl:mx-36 md:my-10 my-0 pt-24 md:pt-4">
 			<div class="lg:w-9/12 w-full md:w-7/12 mb-6 mx-auto md:bg-black/50 bg-transparent md:p-10 p-5 h-full rounded-3xl">
 				<h3 class="mb-3 flex items-center gap-2 text-white font-normal text-3xl">
 					{{ $t("Create new coin") }}
