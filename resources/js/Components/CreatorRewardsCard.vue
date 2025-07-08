@@ -88,7 +88,7 @@ const chartOptions = ref({
           </div>
         </div>
       </div>
-      <button class="bg-gradient-to-r from-[#FF7300] to-[#DA5200] text-white font-semibold px-7 py-2 rounded-full shadow transition hover:brightness-110">
+      <button class="bg-gradient-to-r from-[#FF7300] to-[#DA5200] text-white font-normal text-sm px-7 py-2 rounded-full shadow transition hover:brightness-110">
         Claim rewards
       </button>
     </div>

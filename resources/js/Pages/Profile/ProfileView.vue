@@ -53,7 +53,6 @@ const tabList = [
   { value: 'balances', label: 'Balances' },
   { value: 'coins', label: 'Coins' },
   { value: 'replies', label: 'Replies' },
-  { value: 'notifications', label: 'Notifications' },
   { value: 'followers', label: 'Followers' }
 ];
 
@@ -102,20 +101,25 @@ onMounted(() => {
   }
 })
 
+const stats = [
+  { label: "Followers", value: 123 },
+  { label: "Following", value: 0 },
+  { label: "Created coins", value: 3 }
+];
+
 </script>
 
 <template>
     <Head title="Profile" />
     <AppLayout compact>
-		<div class="flex gap-8 max-w-7xl mx-auto py-10" :style="{ paddingTop: `calc(50px + ${navHeight}px)` }">
-			<!-- Left: Profile & Tabs -->
-			<div class="w-8/12">
-				<div class="bg-black/50 rounded-3xl border border-white/10 p-10 mb-6">
+		<div class="flex flex-col md:flex-row gap-8 py-10 mx-4 md:mx-24" :style="{ paddingTop: `calc(50px + ${navHeight}px)` }">
+			<div class="md:w-8/12 w-full p-2 md:p-0">
+				<div class="flex flex-col bg-black/50 rounded-3xl p-10 w-full">
 					<!-- Profile Header -->
-					<div class="flex items-center justify-between mb-8">
-						<div class="flex items-center gap-6">
+					<div class="flex flex-col md:flex-row items-center justify-between mb-8 gap-6">
+						<div class="flex flex-col md:flex-row items-center gap-6">
 							<img :src="user.avatar" class="w-24 h-24 rounded-full object-cover border-4 border-black/30" />
-							<div class="flex flex-col gap-2">
+							<div class="flex flex-col items-center gap-2">
 								<span class="text-3xl text-white font-semibold">{{ user.username }}</span>
 								<div class="flex items-center gap-2">
 									<span
@@ -123,104 +127,112 @@ onMounted(() => {
 										@click="copyAddress"
 									>
 										{{ shortenAddress(address) }}
-                                        <Copy :class="['w-3 h-3 transition-colors', copied ? 'text-primary' : 'text-white/40']" />
+                    <Copy :class="['w-3 h-3 transition-colors', copied ? 'text-primary' : 'text-white/40']" />
 									</span>
-									<a :href="`https://snowtrace.io/address/${address}`" target="_blank" class="text-white/60 hover:text-orange-400 text-sm ml-2 transition">View on snowtrace &rsaquo;</a>
+									<a :href="`https://snowtrace.io/address/${address}`" target="_blank" class="text-white/60 hover:text-orange-400 text-xs ml-2 transition">View on snowtrace &rsaquo;</a>
 								</div>
 							</div>
 						</div>
-                        <button class="px-8 py-2 rounded-lg font-medium text-[1rem] text-[#da5200] bg-[#da520024] hover:bg-[#da520044] transition text-center shadow-none border-none cursor-pointer" 
-                        @click="openEditModal"
-                        >
-                            Edit
-                        </button>
+            <button class="md:w-auto w-full px-8 py-2 rounded-lg font-medium text-[1rem] text-[#da5200] bg-[#da520024] hover:bg-[#da520044] transition text-center shadow-none border-none cursor-pointer" 
+            @click="openEditModal"
+            >
+                Edit
+            </button>
 					</div>
+          <div class="flex justify-start items-start py-4 px-2 w-full max-w-md gap-10">
+            <div
+              v-for="(stat, idx) in stats"
+              :key="stat.label"
+              class="flex flex-col items-center"
+            >
+              <span class="text-2xl md:text-3xl font-semibold text-white">{{ stat.value }}</span>
+              <span class="text-xs md:text-sm text-gray-400 mt-1">{{ stat.label }}</span>
+            </div>
+          </div>
 					<!-- Tabs using shadcn-vue -->
-					<Tabs default-value="balances" class="w-full mt-8">
-						<TabsList class="flex justify-start border-b border-white/10 bg-transparent px-0 mb-4">
-							<TabsTrigger
-								v-for="tab in tabList"
-								:key="tab.value"
-								:value="tab.value"
-								class="pb-2 mr-5 text-white/60 font-normal border-b border-transparent data-[state=active]:text-white data-[state=active]:border-orange-500"
-							>
-								{{ tab.label }}
-							</TabsTrigger>
-						</TabsList>
-						<TabsContent value="balances" class="mt-4">
-							<div v-for="bal in user.balances" :key="bal.name" class="flex items-center justify-between bg-black/30 px-6 py-2 border-b border-white/10 last:border-b-0">
-								<div class="flex items-center gap-3">
-                                    <img :src="bal.icon" class="w-5 h-5" />
-									<span class="text-white text-lg">{{ bal.name }}</span>
-									<span class="text-white/60 text-sm">{{ bal.amount }}</span>
-								</div>
-								<div class="flex gap-6 text-white/60 text-sm">
-									<span>Market cap: <span class="font-bold text-white">{{ bal.marketCap }}</span></span>
-									<span>Value: <span class="font-bold text-white">{{ bal.value }}</span></span>
-								</div>
-							</div>
-						</TabsContent>
-						<TabsContent value="coins" class="text-white/60">
-							<CreatorRewardsCard />
-                            <div class="divide-y divide-[#232323] max-w-2xl mx-auto">
-                                <div
-                                v-for="coin in user.coins"
-                                :key="coin.symbol"
-                                class="flex items-center py-4"
-                                >
-                                    <img
-                                        :src="coin.icon"
-                                        class="w-10 h-10 rounded-lg object-cover mr-4"
-                                        alt="coin"
-                                    />
-                                    <div class="flex flex-col flex-1">
-                                        <span class="text-white font-semibold">{{ coin.name }}</span>
-                                        <span class="text-xs text-gray-400">{{ coin.symbol }}</span>
-                                    </div>
-                                    <div class="text-sm text-white/80 ml-auto">
-                                        Market cap: <span class="font-semibold text-white">${{ coin.value }}</span>
-                                    </div>
-                                </div>
-                            </div>
-						</TabsContent>
-						<TabsContent value="replies" class="text-white/60">
-                           Replies content here
-                        </TabsContent>
-						<TabsContent value="notifications" class="text-white/60">Notifications content here</TabsContent>
-						<TabsContent value="followers" class="text-white/60">
-                            <div
-                                v-for="follower in paginatedFollowers"
-                                :key="follower.username"
-                                class="bg-[#131212] rounded-xl flex items-center justify-between px-6 py-4 mb-6 shadow-sm w-full"
-                            >
-                                <!-- Left: Avatar and text -->
-                                <div class="flex items-center gap-4">
-                                <img
-                                    :src="follower.avatar"
-                                    alt="Avatar"
-                                    class="w-12 h-12 rounded-full object-cover border-2 border-[#232323]"
-                                />
-                                <div>
-                                    <span class="font-semibold text-white text-base">{{ follower.username }}</span>
-                                    <span class="ml-2 text-gray-400 text-base">{{ follower.message }}</span>
-                                </div>
-                                </div>
-                                <!-- Right: Follow button -->
-                                <button class="ml-auto bg-gradient-to-r to-orange-900 from-primary text-white px-7 py-2 rounded-full font-normal">Follow</button>
-                            </div>
-                            <Pagination
-                                :current-page="currentPage"
-                                :total-pages="totalPages"
-                                @update:page="onPageChange"
-                            />
-                        </TabsContent>
-					</Tabs>
 				</div>
+        <Tabs default-value="balances" class="w-full mt-8">
+          <TabsList class="flex items-center justify-start border-b border-white/10 bg-transparent px-0 mb-4 overflow-x-auto overflow-y-hidden whitespace-nowrap">
+            <TabsTrigger
+              v-for="tab in tabList"
+              :key="tab.value"
+              :value="tab.value"
+              class="pb-2 mr-5 text-white/60 font-normal border-b border-transparent data-[state=active]:text-white data-[state=active]:border-orange-500"
+            >
+              {{ tab.label }}
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent value="balances" class="mt-4">
+            <div v-for="bal in user.balances" :key="bal.name" class="flex items-center justify-between bg-black/30 px-2 md:px-6 py-3 border-b border-white/10 last:border-b-0">
+              <div class="flex items-center gap-3">
+                  <img :src="bal.icon" class="w-5 h-5" />
+                <span class="text-white text-sm">{{ bal.name }}</span>
+                <span class="text-white/60 text-sm">{{ bal.amount }}</span>
+              </div>
+              <div class="flex gap-2 md:gap-6 text-white/60 text-sm">
+                <span>Market cap: <span class="font-normal text-white">{{ bal.marketCap }}</span></span>
+                <span>Value: <span class="font-normal text-white">{{ bal.value }}</span></span>
+              </div>
+            </div>
+          </TabsContent>
+          <TabsContent value="coins" class="text-white/60">
+            <CreatorRewardsCard />
+                <div class="divide-y divide-[#232323] max-w-2xl mx-auto">
+                    <div
+                    v-for="coin in user.coins"
+                    :key="coin.symbol"
+                    class="flex items-center py-4"
+                    >
+                        <img
+                            :src="coin.icon"
+                            class="w-10 h-10 rounded-lg object-cover mr-4"
+                            alt="coin"
+                        />
+                        <div class="flex flex-col flex-1">
+                            <span class="text-white font-semibold">{{ coin.name }}</span>
+                            <span class="text-xs text-gray-400">{{ coin.symbol }}</span>
+                        </div>
+                        <div class="text-sm text-white/80 ml-auto">
+                            Market cap: <span class="font-semibold text-white">${{ coin.value }}</span>
+                        </div>
+                    </div>
+                </div>
+          </TabsContent>
+          <TabsContent value="replies" class="text-white/60">
+                         Replies content here
+                      </TabsContent>
+          <TabsContent value="followers" class="text-white/60">
+            <div
+                v-for="follower in paginatedFollowers"
+                :key="follower.username"
+                class="bg-[#131212] rounded-xl flex items-center justify-between px-6 py-4 mb-6 shadow-sm w-full"
+            >
+            
+                <div class="flex items-center gap-4">
+                <img
+                    :src="follower.avatar"
+                    alt="Avatar"
+                    class="w-12 h-12 rounded-full object-cover border-2 border-[#232323]"
+                />
+                <div>
+                    <span class="font-semibold text-white text-base">{{ follower.username }}</span>
+                    <span class="ml-2 text-gray-400 text-base">{{ follower.message }}</span>
+                </div>
+                </div>
+  
+                <button class="ml-auto bg-gradient-to-r to-orange-900 from-primary text-white px-7 py-2 rounded-full font-normal">Follow</button>
+            </div>
+            <Pagination
+                :current-page="currentPage"
+                :total-pages="totalPages"
+                @update:page="onPageChange"
+            />
+        </TabsContent>
+        </Tabs>
 			</div>
-			<!-- Right: Created Coins & Who to Follow -->
-			<div class="w-4/12 flex flex-col gap-6">
+			<div class="flex flex-col md:w-4/12 w-full gap-6">
 				<!-- Created Coins -->
-				<div class="bg-black/50 rounded-3xl border border-white/10 p-6">
+				<div class="bg-black/50 rounded-3xl p-6">
 					<h3 class="text-white font-normal text-lg mb-4 flex items-center gap-2">
 						Created coins <span class="bg-white/10 text-xs px-2 py-0.5 rounded-full">{{ user.coins.length }}</span>
 					</h3>
@@ -235,7 +247,7 @@ onMounted(() => {
 					</div>
 				</div>
 				<!-- Who to Follow -->
-				<div class="bg-black/50 rounded-3xl border border-white/10 p-6">
+				<div class="bg-black/50 rounded-3xl p-6">
 					<h3 class="text-white font-normal text-lg mb-4">Who to follow</h3>
 					<div v-for="person in user.whoToFollow" :key="person.username" class="flex items-center gap-3 mb-3 border-b border-white/10 last:border-b-0 pb-3">
 						<img :src="person.avatar" class="w-10 h-10 rounded-full" />
@@ -249,7 +261,7 @@ onMounted(() => {
 			</div>
 		</div>
         <template v-if="showEditModal">
-            <div class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/50">
+            <div class="fixed inset-0 z-50 flex md:items-center items-end justify-center bg-gray-900/50">
                 <div class="relative bg-[#181818] rounded-2xl w-full max-w-sm mx-auto p-10 shadow-lg flex flex-col items-center">
                 <!-- Close button -->
                 <button
