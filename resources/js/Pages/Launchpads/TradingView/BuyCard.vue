@@ -366,7 +366,7 @@
 					v-if="useTokenInput && tradeType === 'sell'"
 					class="flex items-center gap-1 mt-2 p-1 rounded-lg">
 					<BaseButton
-						class="text-base font-normal focus:outline-none transition-all bg-transparent text-gray-400 rounded-lg hover:text-white bg-white/10"
+						class="text-base font-normal focus:outline-none transition-all text-gray-400 rounded-lg hover:text-white bg-white/10"
 						@click="tokens = 0"
 						size="xss"
 						icon-mode
@@ -375,35 +375,35 @@
 							class="w-4 h-4 hover:rotate-90 hover:text-red-500 transition-all duration-300" />
 					</BaseButton>
 					<BaseButton
-						class="text-base font-normal focus:outline-none transition-all bg-transparent text-gray-400 rounded-lg hover:text-white bg-white/10"
+						class="text-base font-normal focus:outline-none transition-all text-gray-400 rounded-lg hover:text-white bg-white/10"
 						@click="tokens = info.balance"
 						size="xss"
 						secondary>
 						BAL
 					</BaseButton>
 					<BaseButton
-						class="text-base font-normal focus:outline-none transition-all bg-transparent text-gray-400 rounded-lg hover:text-white bg-white/10"
+						class="text-base font-normal focus:outline-none transition-all text-gray-400 rounded-lg hover:text-white bg-white/10"
 						@click="tokens = info.balance * 0.1"
 						size="xss"
 						secondary>
 						10%
 					</BaseButton>
 					<BaseButton
-						class="text-base font-normal focus:outline-none transition-all bg-transparent text-gray-400 rounded-lg hover:text-white bg-white/10"
+						class="text-base font-normal focus:outline-none transition-all text-gray-400 rounded-lg hover:text-white bg-white/10"
 						@click="tokens = info.balance * 0.25"
 						size="xss"
 						secondary>
 						25%
 					</BaseButton>
 					<BaseButton
-						class="text-base font-normal focus:outline-none transition-all bg-transparent text-gray-400 rounded-lg hover:text-white bg-white/10"
+						class="text-base font-normal focus:outline-none transition-all text-gray-400 rounded-lg hover:text-white bg-white/10"
 						@click="tokens = info.balance * 0.5"
 						size="xss"
 						secondary>
 						50%
 					</BaseButton>
 					<BaseButton
-						class="text-base font-normal focus:outline-none transition-all bg-transparent text-gray-400 rounded-lg hover:text-white bg-white/10"
+						class="text-base font-normal focus:outline-none transition-all text-gray-400 rounded-lg hover:text-white bg-white/10"
 						@click="tokens = info.balance * 0.75"
 						size="xss"
 						secondary>
@@ -414,14 +414,14 @@
 					v-else
 					class="flex items-center gap-1 mt-2 p-1 rounded-lg">
 					<BaseButton
-						class="text-base font-normal focus:outline-none transition-all bg-transparent text-gray-400 rounded-lg hover:text-white bg-white/10"
+						class="text-base font-normal focus:outline-none transition-all text-gray-400 rounded-lg hover:text-white bg-white/10"
 						@click="amount = 0"
 						size="xss"
 						secondary>
 						{{ $t("RESET") }}
 					</BaseButton>
 					<BaseButton 
-					class="text-base font-normal focus:outline-none transition-all bg-transparent text-gray-400 rounded-lg hover:text-white bg-white/10"
+					class="text-base font-normal focus:outline-none transition-all text-gray-400 rounded-lg hover:text-white bg-white/10"
 					@click="amount = 0.1" size="xss" secondary>
 						0.1
 						<ChainSymbol
@@ -429,7 +429,7 @@
 							:chainId="launchpad.chainId" />
 					</BaseButton>
 					<BaseButton 
-					class="text-base font-normal focus:outline-none transition-all bg-transparent text-gray-400 rounded-lg hover:text-white bg-white/10"
+					class="text-base font-normal focus:outline-none transition-all text-gray-400 rounded-lg hover:text-white bg-white/10"
 					@click="amount = 0.5" size="xss" secondary>
 						0.5
 						<ChainSymbol
@@ -437,7 +437,7 @@
 							:chainId="launchpad.chainId" />
 					</BaseButton>
 					<BaseButton 
-					class="text-base font-normal focus:outline-none transition-all bg-transparent text-gray-400 rounded-lg hover:text-white bg-white/10"
+					class="text-base font-normal focus:outline-none transition-all text-gray-400 rounded-lg hover:text-white bg-white/10"
 					@click="amount = 1" size="xss" secondary>
 						1
 						<ChainSymbol
@@ -445,7 +445,7 @@
 							:chainId="launchpad.chainId" />
 					</BaseButton>
 					<BaseButton 
-					class="text-base font-normal focus:outline-none transition-all bg-transparent text-gray-400 rounded-lg hover:text-white bg-white/10"
+					class="text-base font-normal focus:outline-none transition-all text-gray-400 rounded-lg hover:text-white bg-white/10"
 					@click="amount = 3" size="xss" secondary>
 						3
 						<ChainSymbol
