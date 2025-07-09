@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdvancedController;
 use App\Http\Controllers\LaunchpadsController;
 use App\Http\Controllers\MsgsController;
 use App\Http\Controllers\ProfileController;
@@ -20,14 +21,17 @@ Route::get('/privacy', fn() => Inertia::render('Privacy'))->name('privacy');
 
 
 Route::controller(S3Controller::class)
-    ->group(function () {
-        Route::post('sign/{disk?}/{folder?}', 'sign')->name('s3.sign');
-    });
+->group(function () {
+    Route::post('sign/{disk?}/{folder?}', 'sign')->name('s3.sign');
+});
 
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'view'])->name('profile.view');
 });
+
+Route::get('/advanced', [AdvancedController::class, 'advanced'])->name('advanced');
+
 require __DIR__ . '/otp.php';
 require __DIR__ . '/web3.php';
 

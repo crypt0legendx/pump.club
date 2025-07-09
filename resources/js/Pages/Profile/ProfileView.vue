@@ -266,7 +266,7 @@ const stats = [
 		</div>
         <template v-if="showEditModal">
             <div class="fixed inset-0 z-50 flex md:items-center items-end justify-center bg-gray-900/50">
-                <div class="relative bg-[#181818] rounded-2xl w-full max-w-sm mx-auto p-10 shadow-lg flex flex-col items-center">
+                <div class="relative bg-[#181818] rounded-3xl w-full max-w-sm mx-auto p-10 shadow-lg flex flex-col items-center">
                 <!-- Close button -->
                 <button
                     class="absolute top-6 right-6 text-gray-400 hover:text-white text-2xl"

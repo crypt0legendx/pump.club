@@ -289,7 +289,7 @@ onMounted(() => {
                         {{ $t("Find a meme. Pump it. Enjoy") }}
                     </h1>
                     <div class="flex flex-col gap-4 w-full md:w-1/2 lg:w-1/3">
-                        <FormInput v-model="search" class="ml-auto mr-auto w-full" size="md"
+                        <FormInput v-model="search" class="ml-auto mr-auto w-full" size="md" inputClasses="!rounded-3xl"
                             placeholder="Search for meme">
                             <template #lead>
                                 <Search class="w-4 h-4 ml-1 text-gray-400" />
@@ -482,8 +482,8 @@ onMounted(() => {
     </AppLayout>
     <template v-if="showAddModal">
         <div class="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-gray-900/50">
-            <div class="bg-gray-900 rounded-2xl p-10 w-full max-w-fit relative shadow-xl border border-white/10">
-                <button class="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl" @click="showAddModal = false">&times;</button>
+            <div class="bg-gray-900 rounded-3xl p-10 w-full max-w-fit relative shadow-xl border border-white/10">
+                <button class="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl" @click="showAddModal = false"><X class="w-5 h-5" /></button>
                 <h2 class="text-3xl font-normal text-white text-center mb-2">Manage lists</h2>
                 <div class="text-gray-400 text-center mb-6">Create new lists or manage your existing lists here</div>
                 <div class="border-t border-white/10 mb-6"></div>

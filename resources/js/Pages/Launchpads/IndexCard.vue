@@ -16,7 +16,7 @@ const useLists = () => {
         { name: 'Main list', default: true },
         { name: 'List #1', default: false },
         { name: 'List #2', default: false },
-    ]);
+    ]); 
 
     const loadLists = () => {
         try {
@@ -89,6 +89,10 @@ watch(selectedList, (val) => {
      if (val === 'Manage lists') {
          selectOpen.value = false;
          selectedList.value = null;
+         return;
+     }
+     
+     if (val === null) {
          return;
      }
      

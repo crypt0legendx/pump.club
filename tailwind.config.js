@@ -45,6 +45,7 @@ export default {
                     dark: '#e6aa17'  // ~10% darker for hover state
                 },
                 'black-card': "#28282840",
+                'white/4': "#FFFFFF0A",
                 gray: {
                     '50': "#fafafa",
                     '100': "#f5f5f5",
