@@ -117,6 +117,15 @@ onMounted(() => {
   }
 });
 
+const footerHeight = ref(76)
+const footerRef = ref(null)
+
+onMounted(() => {
+  if (footerRef.value) {
+    navHeight.value = navRef.value.offsetHeight
+  }
+})
+
 </script>  
 
 <template>
@@ -218,7 +227,7 @@ onMounted(() => {
                 </button>
               </div>
               <div class="flex flex-col w-full">
-                <ScrollArea class="h-[610px] w-full overflow-hidden p-2">
+                <ScrollArea class="w-full overflow-hidden p-2" :style="{ height: `calc(100vh - 205px - ${footerHeight}px)` }">
                     <div v-if="launchpadsByColumn[col.title].length > 0" class="flex flex-col w-full">
                       <AdvancedCard v-for="(launchpad, idx) in launchpadsByColumn[col.title]" :key="idx"
                         :launchpad="launchpad" />
