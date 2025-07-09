@@ -232,7 +232,7 @@ onMounted(() => {
                       <AdvancedCard v-for="(launchpad, idx) in launchpadsByColumn[col.title]" :key="idx"
                         :launchpad="launchpad" />
                     </div>
-                    <div v-else class="flex flex-col items-center justify-center h-[590px] bg-white/10 rounded-lg p-4 w-full"> 
+                    <div v-else class="flex flex-col items-center justify-center bg-white/10 rounded-lg p-4 w-full" :style="{ height: `calc(100vh - 225px - ${footerHeight}px)` }"> 
                       <div class="text-white/50 text-sm">It's empty here so far</div>
                     </div>
                 </ScrollArea>
