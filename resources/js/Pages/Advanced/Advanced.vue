@@ -236,8 +236,8 @@ onMounted(() => {
         <!-- Logo and Brand -->
         <div class="flex flex-row items-center gap-4">
           <Link class="flex items-center" href="/">
-            <!-- <ApplicationLogo class="block h-full w-auto font-semibold" /> -->
-            <span class="text-white text-2xl font-bold">pump.club</span>
+            <ApplicationLogo class="block h-full w-auto font-semibold" />
+            <!-- <span class="text-white text-2xl font-bold">pump.club</span> -->
           </Link>
           <div class="flex flex-row items-center gap-2">
             <img src="/avax-icon.svg" class="w-4 h-4" />
