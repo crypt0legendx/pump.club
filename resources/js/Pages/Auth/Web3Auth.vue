@@ -14,15 +14,14 @@
     import { avalanche, avalancheFuji, blast, linea, sepolia } from "viem/chains";
 
     import DangerButton from "@/Components/DangerButton.vue";
+    import PrimaryButton from "@/Components/PrimaryButton.vue";
+    import SecondaryButton from "@/Components/SecondaryButton.vue";
     import {
         DropdownMenu,
         DropdownMenuContent,
         DropdownMenuItem,
         DropdownMenuTrigger,
     } from "@/Components/ui/dropdown-menu";
-
-    import PrimaryButton from "@/Components/PrimaryButton.vue";
-    import SecondaryButton from "@/Components/SecondaryButton.vue";
     import { shortenAddress } from "@/lib/wagmi";
     import {
         networks,

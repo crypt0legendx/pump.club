@@ -5,6 +5,7 @@
 	import { useChainId } from "@wagmi/vue";
 	import { ChevronDown, CircleAlert, ImageIcon, Link, PenLine, Trash2 } from "lucide-vue-next";
 	import { parseEventLogs } from "viem";
+
 	import CollapseTransition from "@/Components/CollapseTransition.vue";
 	import FormInput from "@/Components/FormInput.vue";
 	import FormLabel from "@/Components/FormLabel.vue";
@@ -12,6 +13,7 @@
 	import Loading from "@/Components/Loading.vue";
 	import LogoInputLocal from "@/Components/LogoInputLocal.vue";
 	import PrimaryButton from "@/Components/PrimaryButton.vue";
+	import { Carousel, CarouselContent, CarouselItem } from "@/Components/ui/carousel";
 	import {
 		useContractFees,
 		useReactiveContractCall,
@@ -19,7 +21,6 @@
 	import AppLayout from "@/Layouts/AppLayout.vue";
 	import Web3Auth from "@/Pages/Auth/Web3Auth.vue";
 	import BarButton from "@/Pages/Launchpads/BarButton.vue";
-	import { Carousel, CarouselContent, CarouselItem } from "@/Components/ui/carousel";
 
 	const props = defineProps({
 		factories: Array,
@@ -50,7 +51,7 @@
 			preserveScroll: true,
 		});
 	
-	const navHeight = ref(90)
+	const navHeight = ref(90);
 	const navRef = ref(null);
 	const logoInputLocal = ref(null);
 	const logo_base64 = ref(null);
@@ -105,9 +106,9 @@
 
 	onMounted(() => {
 	if (navRef.value) {
-		navHeight.value = navRef.value.offsetHeight
+		navHeight.value = navRef.value.offsetHeight;
 	}
-	})
+	});
 
 </script>
 <template>

@@ -1,14 +1,16 @@
 <script setup>
 import { onMounted, ref, computed } from 'vue';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/Components/ui/tabs';
+
 import { Head } from '@inertiajs/vue3';
-import AppLayout from '@/Layouts/AppLayout.vue';
 import { useAccount } from '@wagmi/vue';
-import { shortenAddress } from '@/lib/wagmi';
 import { Camera, Copy, X } from 'lucide-vue-next';
+
 import CreatorRewardsCard from '@/Components/CreatorRewardsCard.vue';
 import Pagination from "@/Components/ui/pagination/Pagination.vue";
 import { ScrollArea, ScrollBar } from '@/Components/ui/scroll-area';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/Components/ui/tabs';
+import AppLayout from '@/Layouts/AppLayout.vue';
+import { shortenAddress } from '@/lib/wagmi';
 
 const user = {
   username: '@kevin_91',
@@ -48,7 +50,7 @@ const user = {
     { username: '@Alice', avatar: 'https://randomuser.me/api/portraits/women/12.jpg', message: 'followed you' },
     { username: '@Bob', avatar: 'https://randomuser.me/api/portraits/men/23.jpg', message: 'followed you' },
   ]
-}
+};
 
 const tabList = [
   { value: 'balances', label: 'Balances' },
@@ -93,14 +95,14 @@ function onPageChange(page) {
   currentPage.value = page;
 }
 
-const navHeight = ref(90)
-const navRef = ref(null)
+const navHeight = ref(90);
+const navRef = ref(null);
 
 onMounted(() => {
   if (navRef.value) {
-    navHeight.value = navRef.value.offsetHeight
+    navHeight.value = navRef.value.offsetHeight;
   }
-})
+});
 
 const stats = [
   { label: "Followers", value: 123 },

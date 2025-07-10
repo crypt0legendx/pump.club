@@ -16,8 +16,8 @@ import {
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import HowItWorksModal from "@/Layouts/AppLayout/HowItWorksModal.vue";
-import Web3Auth from "@/Pages/Auth/Web3Auth.vue";
 import NavActions from "@/Layouts/AppLayout/NavActions.vue";
+import Web3Auth from "@/Pages/Auth/Web3Auth.vue";
 
 const isMobileMenuOpen = ref(false);
 const showHowItworks = ref(false);

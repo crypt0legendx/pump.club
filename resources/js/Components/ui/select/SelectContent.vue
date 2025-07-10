@@ -2,9 +2,9 @@
 import {
   SelectContent,
   useForwardProps,
-} from 'radix-vue';
+ SelectPortal } from 'radix-vue';
+
 import { cn } from '@/lib/utils';
-import { SelectPortal } from 'radix-vue';
 
 const props = defineProps({
   class: { type: null, required: false },

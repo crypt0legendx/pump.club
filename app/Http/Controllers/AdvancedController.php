@@ -19,24 +19,36 @@ class AdvancedController extends Controller
     {
         $keyword = $request->get('search');
         $perPage = 25;
-        $query = Launchpad::query()
+
+        // Always get all launchpads for the main list (no search filter)
+        $launchpadsQuery = Launchpad::query()
             ->with(['factory'])
             ->withSum(['trades as volume24h' => fn($q) => $q->where('created_at', '>=', now()->subDays(1))], 'usd')
             ->withCount(['trades']);
-        
+
+        $launchpadsItems = $launchpadsQuery->latest('volume24h')->paginate($perPage);
+
+        // If you want to return filtered results for the modal/search, do it separately
+        $searchedLaunchpads = collect();
         if (!empty($keyword)) {
-            $query->where('contract', 'LIKE', "%$keyword%")
-                ->orWhere('token', 'LIKE', "%$keyword%")
-                ->orWhere('name', 'LIKE', "%$keyword%")
-                ->orWhere('symbol', 'LIKE', "%$keyword%")
-                ->orWhere('description', 'LIKE', "%$keyword%")
-                ->orWhere('website', 'LIKE', "%$keyword%");
+            $searchedQuery = Launchpad::query()
+                ->with(['factory'])
+                ->withSum(['trades as volume24h' => fn($q) => $q->where('created_at', '>=', now()->subDays(1))], 'usd')
+                ->withCount(['trades'])
+                ->where(function($q) use ($keyword) {
+                    $q->where('contract', 'LIKE', "%$keyword%")
+                      ->orWhere('token', 'LIKE', "%$keyword%")
+                      ->orWhere('name', 'LIKE', "%$keyword%")
+                      ->orWhere('symbol', 'LIKE', "%$keyword%")
+                      ->orWhere('description', 'LIKE', "%$keyword%")
+                      ->orWhere('website', 'LIKE', "%$keyword%");
+                });
+            $searchedLaunchpads = $searchedQuery->get();
         }
-        
-        $launchpadsItems = $query->latest('volume24h')->paginate($perPage);
-        
+
         return Inertia::render('Advanced/Advanced', [
             'launchpads' => LaunchpadResource::collection($launchpadsItems),
+            'searchedLaunchpads' => LaunchpadResource::collection($searchedLaunchpads),
             'type' => 'advanced',
             'top' => function () {
                 return $this->getTopLaunchpads();

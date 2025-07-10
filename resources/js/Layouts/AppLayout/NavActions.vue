@@ -1,8 +1,9 @@
 <script setup>
+import { useAccount } from "@wagmi/vue";
+import { Plus } from "lucide-vue-next";
+
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import Web3Auth from "@/Pages/Auth/Web3Auth.vue";
-import { Plus } from "lucide-vue-next";
-import { useAccount } from "@wagmi/vue";
 
 const { isConnected } = useAccount();
 

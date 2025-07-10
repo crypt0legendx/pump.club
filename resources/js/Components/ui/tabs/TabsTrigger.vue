@@ -1,7 +1,9 @@
 <script setup>
-import { cn } from '@/lib/utils';
-import { TabsTrigger, useForwardProps } from 'radix-vue';
 import { computed } from 'vue';
+
+import { TabsTrigger, useForwardProps } from 'radix-vue';
+
+import { cn } from '@/lib/utils';
 
 const props = defineProps({
   value: { type: [String, Number], required: true },

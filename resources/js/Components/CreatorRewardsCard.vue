@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import { Line } from 'vue-chartjs';
+
 import {
   Chart as ChartJS,
   Title,
@@ -11,6 +11,7 @@ import {
   CategoryScale,
   LinearScale,
 } from 'chart.js';
+import { Line } from 'vue-chartjs';
 
 ChartJS.register(Title, Tooltip, Legend, LineElement, PointElement, CategoryScale, LinearScale);
 

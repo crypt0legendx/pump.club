@@ -3,7 +3,12 @@
     "type": "module",
     "scripts": {
         "build": "vite build",
-        "dev": "vite"
+        "dev": "vite",
+        "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
+        "lint:check": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --ignore-path .gitignore",
+        "format": "prettier --write src/ resources/js/",
+        "format:check": "prettier --check src/ resources/js/",
+        "lint:format": "yarn run lint && yarn run format"
     },
     "devDependencies": {
         "@inertiajs/vue3": "^1.0.0",

@@ -1,6 +1,7 @@
 <script setup>
-import { CheckboxRoot, useForwardPropsEmits, CheckboxIndicator } from 'radix-vue';
 import { Check } from 'lucide-vue-next';
+import { CheckboxRoot, useForwardPropsEmits, CheckboxIndicator } from 'radix-vue';
+
 import { cn } from '@/lib/utils';
 
 const props = defineProps({

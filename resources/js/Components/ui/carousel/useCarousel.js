@@ -1,4 +1,5 @@
 import { provide, inject, ref, onMounted, onUnmounted, watch } from 'vue';
+
 import useEmblaCarousel from 'embla-carousel-vue';
 
 const CarouselContext = Symbol('CarouselContext');

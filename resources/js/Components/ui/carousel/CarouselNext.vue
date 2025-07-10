@@ -1,5 +1,6 @@
 <script setup>
 import { ChevronRight } from 'lucide-vue-next';
+
 import { useCarousel } from './useCarousel';
 import { Button } from '@/Components/ui/button';
 import { cn } from '@/lib/utils';

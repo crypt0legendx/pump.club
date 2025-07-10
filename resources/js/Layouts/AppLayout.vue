@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted } from "vue";
+
 import FlashMessages from "@/Layouts/AppLayout/FlashMessages.vue";
 import Footer from "@/Layouts/AppLayout/Footer.vue";
 import TopNav from "@/Layouts/AppLayout/TopNav.vue";
@@ -13,14 +14,14 @@ import TopNav from "@/Layouts/AppLayout/TopNav.vue";
 	});
 
 	// We'll add state management and other functionality as needed
-const navHeight = ref(90)
-const navRef = ref(null)
+const navHeight = ref(90);
+const navRef = ref(null);
 
 onMounted(() => {
   if (navRef.value) {
-    navHeight.value = navRef.value.offsetHeight
+    navHeight.value = navRef.value.offsetHeight;
   }
-})
+});
 
 </script>
 <template>

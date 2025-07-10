@@ -1,11 +1,12 @@
 <script setup>
+import { Check } from 'lucide-vue-next';
 import {
   SelectItem,
   useForwardProps,
   SelectItemIndicator,
   SelectItemText,
 } from 'radix-vue';
-import { Check } from 'lucide-vue-next';
+
 import { cn } from '@/lib/utils';
 
 const props = defineProps({

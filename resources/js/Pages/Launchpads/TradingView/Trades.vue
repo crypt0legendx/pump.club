@@ -2,13 +2,13 @@
 	import { onMounted, onUnmounted, ref } from "vue";
 
 	import { Link, usePage } from "@inertiajs/vue3";
+	import { ExternalLink } from "lucide-vue-next";
 
 	import ChainSymbol from "@/Components/ChainSymbol.vue";
 	import LargeDecimal from "@/Components/LargeDecimal.vue";
 	import Pagination from "@/Components/Pagination.vue";
-	import { shortenAddress } from "@/lib/wagmi";
-	import { ExternalLink } from "lucide-vue-next";
 	import { ScrollArea, ScrollBar } from '@/Components/ui/scroll-area';
+	import { shortenAddress } from "@/lib/wagmi";
 
 	const props = defineProps({
 		trades: Object,

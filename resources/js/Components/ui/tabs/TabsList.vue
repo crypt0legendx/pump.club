@@ -1,7 +1,9 @@
 <script setup>
-import { cn } from '@/lib/utils';
-import { TabsList } from 'radix-vue';
 import { computed } from 'vue';
+
+import { TabsList } from 'radix-vue';
+
+import { cn } from '@/lib/utils';
 
 const props = defineProps({
   loop: { type: Boolean, required: false },

@@ -1,10 +1,13 @@
 <script setup>
 import { onMounted, ref } from "vue";
 
+import { Link } from "@inertiajs/vue3";
 import { ChevronLeft, MessageSquare, TvMinimalPlay, UsersRound } from "lucide-vue-next";
 import { RiExchangeLine } from "oh-vue-icons/icons";
-import { shortenAddress } from "@/lib/wagmi";
+
+import { Carousel, CarouselContent, CarouselItem } from "@/Components/ui/carousel";
 import AppLayout from "@/Layouts/AppLayout.vue";
+import { shortenAddress } from "@/lib/wagmi";
 import BarButton from "@/Pages/Launchpads/BarButton.vue";
 import Chat from "@/Pages/Launchpads/Chat.vue";
 import BuyCard from "@/Pages/Launchpads/TradingView/BuyCard.vue";
@@ -14,8 +17,6 @@ import Info from "@/Pages/Launchpads/TradingView/Info.vue";
 import LockCard from "@/Pages/Launchpads/TradingView/LockCard.vue";
 import Trades from "@/Pages/Launchpads/TradingView/Trades.vue";
 import TradingViewChart from "@/Pages/Launchpads/TradingView/TradingViewChart.vue";
-import { Link } from "@inertiajs/vue3";
-import { Carousel, CarouselContent, CarouselItem } from "@/Components/ui/carousel";
 
 defineProps({
     launchpad: Object,
@@ -33,14 +34,14 @@ const tabs = [
 ];
 const activeTab = ref("Chat");
 
-const navHeight = ref(90)
-const navRef = ref(null)
+const navHeight = ref(90);
+const navRef = ref(null);
 
 onMounted(() => {
   if (navRef.value) {
-    navHeight.value = navRef.value.offsetHeight
+    navHeight.value = navRef.value.offsetHeight;
   }
-})
+});
 </script>
 <template>
     <AppLayout compact>

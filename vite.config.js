@@ -23,7 +23,7 @@ export default defineConfig({
       build: {
         rollupOptions: {
             onwarn() {
-                return;
+                
             },
         },
         commonjsOptions: {

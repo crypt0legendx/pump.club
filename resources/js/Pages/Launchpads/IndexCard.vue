@@ -1,7 +1,9 @@
 <script setup>
+import { ref, computed, watch, onMounted } from 'vue';
+
 import { Link } from '@inertiajs/vue3';
 import { Star } from 'lucide-vue-next';
-import { ref, computed, watch, onMounted } from 'vue';
+
 import {
   Select,
   SelectTrigger,

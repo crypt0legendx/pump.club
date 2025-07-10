@@ -239,14 +239,14 @@ const sortedLaunchpads = computed(() => {
     return launchpadsInfo.launchpads.value.slice().sort((a, b) => Number(b.marketCap) - Number(a.marketCap));
 });
 
-const navHeight = ref(90)
-const navRef = ref(null)
+const navHeight = ref(90);
+const navRef = ref(null);
 
 onMounted(() => {
   if (navRef.value) {
-    navHeight.value = navRef.value.offsetHeight
+    navHeight.value = navRef.value.offsetHeight;
   }
-})
+});
 
 </script>
 

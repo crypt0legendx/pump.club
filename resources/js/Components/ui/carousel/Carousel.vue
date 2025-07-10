@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue';
+
 import { useCarouselProvider } from './useCarousel';
 
 const props = defineProps({
