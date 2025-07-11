@@ -275,8 +275,9 @@ function copyContract(contract) {
                         </div>
                     </div>
                     <div class="col-span-1 relative">
-                        <div class="flex flex-col items-stretch justify-between h-full absolute inset-0">
-                            <ScrollArea class="h-full">
+                        <div class="flex h-full absolute inset-0">
+                            <div class="flex flex-col h-full w-full items-stretch justify-between overflow-scroll">
+                                <!-- <div class="flex flex-col items-stretch justify-between h-full"> -->
                                 <div class="w-full max-w-md mx-auto bg-black/80 rounded-2xl p-3">
                                     <!-- Header -->
                                     <div class="flex items-center justify-between mb-4">
@@ -287,7 +288,6 @@ function copyContract(contract) {
                                     <BuyCard :launchpad="launchpad" />
                                 </div>
                                 <div class="w-full">
-                                    <!-- Top row: only vertical (middle) borders -->
                                     <div class="grid grid-cols-4 border-t border-white/20">
                                         <div class="p-2 text-center">
                                             <div class="text-white/50 text-sm">Bought</div>
@@ -307,7 +307,7 @@ function copyContract(contract) {
                                         </div>
                                     </div>
                                 </div>
-                            </ScrollArea>
+                            </div>
                         </div>
                     </div>
                 </div>

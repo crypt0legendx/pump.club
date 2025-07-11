@@ -1,14 +1,16 @@
 <script setup>
-import { ref, onMounted } from "vue";
-
-import FlashMessages from "@/Layouts/AppLayout/FlashMessages.vue";
-import Footer from "@/Layouts/AppLayout/Footer.vue";
-import TopNav from "@/Layouts/AppLayout/TopNav.vue";
+import { computed, ref } from "vue";
 import { Link } from "@inertiajs/vue3";
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
-import { ChartBarIncreasing, House, Plus, Search, Settings } from "lucide-vue-next";
+import { ChartBarIncreasing, House, Plus, Search, Settings, X } from "lucide-vue-next";
 import Web3Auth from "@/Pages/Auth/Web3Auth.vue";
 import Separator from "@/Components/ui/separator/Separator.vue";
+import { useStore } from "vuex";
+import { ScrollArea } from "@/Components/ui/scroll-area";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
+import FormInput from "@/Components/FormInput.vue";
+import { debouncedWatch, useUrlSearchParams } from "@vueuse/core";
+import axios from "axios";
 
 // Props
 defineProps({
@@ -19,15 +21,37 @@ defineProps({
     compact: Boolean,
 });
 
-// We'll add state management and other functionality as needed
-const navHeight = ref(90);
-const navRef = ref(null);
+const store = useStore();
+const searchedLaunchpads = ref([]);
+const searchModal = computed(() => store.state.searchModal);
 
-onMounted(() => {
-    if (navRef.value) {
-        navHeight.value = navRef.value.offsetHeight;
-    }
-});
+function openSearchModal() {
+    store.dispatch('openSearchModal');
+}
+
+const params = useUrlSearchParams("history");
+const search = ref(params.search ?? "");
+
+debouncedWatch(
+    [search],
+    ([search]) => {
+        if (search.trim()) {
+            axios.get(window.route("advanced.search"), { params: { search: search.trim() } })
+                .then(response => {
+                    searchedLaunchpads.value = response.data;
+                });
+        } else {
+            searchedLaunchpads.value = [];
+        }
+    },
+    {
+        maxWait: 700,
+    },
+);
+
+function closeSearchModal() {
+    store.dispatch('closeSearchModal');
+}
 
 </script>
 <template>
@@ -110,4 +134,58 @@ onMounted(() => {
             </div>
         </footer>
     </div>
+
+    <!-- Search Modal -->
+    <template v-if="searchModal">
+        <div class="fixed inset-0 bg-gray-900/50 flex items-center justify-center z-[999999]">
+            <div class="bg-gray-900 rounded-3xl p-8 w-full max-w-sm relative shadow-xl border border-white/10">
+                <!-- Close button -->
+                <button class="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl"
+                    @click="closeSearchModal">
+                    <X class="w-5 h-5" />
+                </button>
+                <!-- Title -->
+                <h2 class="text-2xl font-semibold text-white mb-6">Search</h2>
+                <!-- Search input -->
+                <div class="flex flex-col gap-4 w-full">
+                    <FormInput v-model="search" class="ml-auto mr-auto w-full py-3" size="md"
+                        inputClasses="!rounded-3xl" placeholder="Search for meme">
+                        <template #lead>
+                            <Search class="w-4 h-4 ml-1 text-gray-400" />
+                        </template>
+                        <template #trail>
+                            <PrimaryButton size="xs"
+                                class="rounded-full text-white hover:bg-transparent px-4 py-2.5 cursor-pointer"
+                                style="background: linear-gradient(to right, #6C2801 0%, #DA5200 34%, #E97C02 100%);">
+                                {{ $t("Search") }}
+                            </PrimaryButton>
+                        </template>
+                    </FormInput>
+                </div>
+                <!-- History -->
+                <div>
+                    <div class="text-white/60 text-sm mb-2">History:</div>
+                    <ScrollArea class="w-full overflow-hidden p-2 h-[400px]">
+                        <div class="flex flex-col gap-2">
+                            <Link :href="route('advanced.advancedTradingView', { contract: item.contract })"
+                                v-for="(item, idx) in searchedLaunchpads" :key="idx"
+                                class="flex items-center justify-between py-2 px-2 rounded-lg hover:bg-white/5 transition cursor-pointer">
+                            <div class="flex items-center gap-3">
+                                <img :src="item.logo"
+                                    class="w-10 h-10 rounded-full object-cover border border-white/10" />
+                                <div class="flex flex-col">
+                                    <span class="text-white font-medium leading-tight">{{ item.name }}</span>
+                                    <span class="text-white/40 text-xs font-mono">{{ item.symbol }}</span>
+                                </div>
+                            </div>
+                            <div class="text-white/80 text-sm whitespace-nowrap">Market cap: <span
+                                    class="font-semibold">{{
+                                        item.marketCap }}</span></div>
+                            </Link>
+                        </div>
+                    </ScrollArea>
+                </div>
+            </div>
+        </div>
+    </template>
 </template>

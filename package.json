@@ -72,6 +72,7 @@
         "vue-tippy": "^6.0.0-alpha.65",
         "vue3-emoji-picker": "^1.1.8",
         "vue3-simple-icons": "^13.2.0",
+        "vuex": "^4.1.0",
         "zod": "^3.23.8"
     }
 }

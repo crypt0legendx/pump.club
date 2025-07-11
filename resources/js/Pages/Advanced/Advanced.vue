@@ -1,24 +1,18 @@
 <script setup>
 import { computed, ref, onMounted } from "vue";
-
+import { useStore } from 'vuex';
 import { FunnelIcon } from "@heroicons/vue/24/outline";
-import { Link, router } from "@inertiajs/vue3";
 import { debouncedWatch, useUrlSearchParams } from "@vueuse/core";
-import { ChartBarIncreasing, CircleAlert, EyeOff, GripVertical, House, Inbox, PackagePlus, PlayIcon, Plus, Search, Settings, X } from "lucide-vue-next";
+import { CircleAlert, EyeOff, GripVertical, Inbox, PackagePlus, PlayIcon, Settings, X } from "lucide-vue-next";
 
 import AdvancedCard from "./AdvancedCard.vue";
-import Web3Auth from "../Auth/Web3Auth.vue";
-import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 import FormInput from "@/Components/FormInput.vue";
-import PrimaryButton from "@/Components/PrimaryButton.vue";
 import { ScrollArea } from "@/Components/ui/scroll-area";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/Components/ui/select";
-import { Separator } from "@/Components/ui/separator";
 import { Switch } from "@/Components/ui/switch";
 import { useLaunchpadsData } from "@/hooks/useLaunchpadsData";
 import useLocalStorage from '@/hooks/useLocalStorage';
 import { TRADE_SETTINGS } from "@/store/constants";
-import axios from "axios";
 import AdvancedLayout from "@/Layouts/AdvancedLayout.vue";
 
 const props = defineProps({
@@ -51,8 +45,6 @@ const defaultColumns = [
   { title: "Featured", subtitle: "featured", enabled: false },
 ];
 
-const footerHeight = ref(76);
-const footerRef = ref(null);
 const selectedPreset = ref(presetsLists[0].value);
 const addColumnModal = ref(false);
 const tempColumnManage = ref([]);
@@ -68,28 +60,6 @@ const autoBribeMax = ref(0.01);
 const mevProtection = ref(true);
 const launchpadsList = computed(() => props.launchpads?.data || []);
 const launchpadsInfo = useLaunchpadsData(launchpadsList, props.usdRates);
-const searchModal = ref(false);
-const searchedLaunchpads = ref([]);
-
-const params = useUrlSearchParams("history");
-const search = ref(params.search ?? "");
-
-debouncedWatch(
-  [search],
-  ([search]) => {
-    if (search.trim()) {
-      axios.get(window.route("advanced.search"), { params: { search: search.trim() } })
-        .then(response => {
-          searchedLaunchpads.value = response.data;
-        });
-    } else {
-      searchedLaunchpads.value = [];
-    }
-  },
-  {
-    maxWait: 700,
-  },
-);
 
 function resetAllColumns() {
   tempColumnManage.value.forEach((col, idx) => {
@@ -121,14 +91,6 @@ function setTradePreset(preset) {
 
 function closeTradeSettings() {
   tradeSettingsModal.value = false;
-}
-
-function openSearchModal() {
-  searchModal.value = true;
-}
-
-function closeSearchModal() {
-  searchModal.value = false;
 }
 
 // Computed property for enabled columns
@@ -177,19 +139,11 @@ onMounted(() => {
   }
 });
 
-onMounted(() => {
-  if (footerRef.value) {
-    navHeight.value = navRef.value.offsetHeight;
-  }
-});
-
 </script>
 
 <template>
   <AdvancedLayout>
     <div class="flex flex-row items-center gap-3 py-2 px-2 border-b border-white/10">
-      <!-- Quick Buy -->
-      <!-- Amount + Settings -->
       <div class="flex items-center">
         <div class="relative flex items-center bg-white/4 rounded-lg">
           <div class="flex items-center">
@@ -372,56 +326,6 @@ onMounted(() => {
           class="w-full py-3 rounded-xl bg-gradient-to-r from-orange-400 to-orange-600 text-white font-semibold text-lg shadow hover:opacity-90 transition">
           Done
         </button>
-      </div>
-    </div>
-  </template>
-
-  <!-- Search Modal -->
-  <template v-if="searchModal">
-    <div class="fixed inset-0 bg-gray-900/50 flex items-center justify-center z-[999999]">
-      <div class="bg-gray-900 rounded-3xl p-8 w-full max-w-sm relative shadow-xl border border-white/10">
-        <!-- Close button -->
-        <button class="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl" @click="closeSearchModal">
-          <X class="w-5 h-5" />
-        </button>
-        <!-- Title -->
-        <h2 class="text-2xl font-semibold text-white mb-6">Search</h2>
-        <!-- Search input -->
-        <div class="flex flex-col gap-4 w-full">
-          <FormInput v-model="search" class="ml-auto mr-auto w-full py-3" size="md" inputClasses="!rounded-3xl"
-            placeholder="Search for meme">
-            <template #lead>
-              <Search class="w-4 h-4 ml-1 text-gray-400" />
-            </template>
-            <template #trail>
-              <PrimaryButton size="xs" class="rounded-full text-white hover:bg-transparent px-4 py-2.5 cursor-pointer"
-                style="background: linear-gradient(to right, #6C2801 0%, #DA5200 34%, #E97C02 100%);">
-                {{ $t("Search") }}
-              </PrimaryButton>
-            </template>
-          </FormInput>
-        </div>
-        <!-- History -->
-        <div>
-          <div class="text-white/60 text-sm mb-2">History:</div>
-          <ScrollArea class="w-full overflow-hidden p-2 h-[400px]">
-            <div class="flex flex-col gap-2">
-              <Link :href="route('advanced.advancedTradingView', { contract: item.contract })"
-                v-for="(item, idx) in searchedLaunchpads" :key="idx"
-                class="flex items-center justify-between py-2 px-2 rounded-lg hover:bg-white/5 transition cursor-pointer">
-              <div class="flex items-center gap-3">
-                <img :src="item.logo" class="w-10 h-10 rounded-full object-cover border border-white/10" />
-                <div class="flex flex-col">
-                  <span class="text-white font-medium leading-tight">{{ item.name }}</span>
-                  <span class="text-white/40 text-xs font-mono">{{ item.symbol }}</span>
-                </div>
-              </div>
-              <div class="text-white/80 text-sm whitespace-nowrap">Market cap: <span class="font-semibold">{{
-                item.marketCap }}</span></div>
-              </Link>
-            </div>
-          </ScrollArea>
-        </div>
       </div>
     </div>
   </template>
