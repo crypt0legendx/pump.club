@@ -8,3 +8,7 @@ export const TRADE_SETTINGS = [
         value: 'sell',
     }
 ];
+
+export const ADVANCED_TABS = [
+    { label: 'Coin Chart', value: 'coin-chart' }
+];

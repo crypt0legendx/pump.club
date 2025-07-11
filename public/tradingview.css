@@ -1,8 +1,8 @@
 .theme-dark:root {
 	/* Platform and Background Colors */
-	--tv-color-platform-background: #15161b;
+	--tv-color-platform-background: #000;
 	/* gray-900 - page background */
-	--tv-color-pane-background: #15171b;
+	--tv-color-pane-background: #000;
 	/* gray-800 - chart background */
 
 	/* Toolbar Colors */
@@ -84,7 +84,7 @@
 :root:not(.theme-dark) {
 	/* You can define light theme colors here if needed */
 	/* Currently inheriting dark theme */
-	--tv-color-platform-background: #15161b;
-	--tv-color-pane-background: #15171b;
+	--tv-color-platform-background: #000;
+	--tv-color-pane-background: #000;
 	/* ... copy all other properties from dark theme */
 }

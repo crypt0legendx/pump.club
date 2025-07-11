@@ -19,6 +19,7 @@ import { useLaunchpadsData } from "@/hooks/useLaunchpadsData";
 import useLocalStorage from '@/hooks/useLocalStorage';
 import { TRADE_SETTINGS } from "@/store/constants";
 import axios from "axios";
+import AdvancedLayout from "@/Layouts/AdvancedLayout.vue";
 
 const props = defineProps({
   launchpads: [Array, Object],
@@ -185,42 +186,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="flex flex-col home-bg h-screen">
-    <!-- Ticker Bar -->
-    <div class="w-full border-b border-white/10 py-0 px-2 flex overflow-x-auto whitespace-nowrap gap-6"
-      style="min-height: 38px;">
-      <div v-for="i in 8" :key="i" class="flex items-center gap-2 min-w-max">
-        <img src="/indexcard.png" class="w-5 h-5 rounded-full" />
-        <span class="text-white font-semibold text-xs">PNDA</span>
-        <span v-if="i % 2 === 0" class="flex items-center text-xs text-red-400 font-semibold">
-          <svg class="w-3 h-3 mr-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-          </svg>
-          0.7838 AVAX
-        </span>
-        <span v-else class="flex items-center text-xs text-green-400 font-semibold">
-          <svg class="w-3 h-3 mr-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
-          </svg>
-          0.7838 AVAX
-        </span>
-        <span class="text-white/60 text-xs">@kevin_91</span>
-      </div>
-    </div>
-    <div class="flex flex-row items-center gap-2 py-1 px-2 border-b border-white/10">
-      <div class="flex flex-row items-center gap-1">
-        <House class="w-3.5 h-3.5 text-primary" />
-        <span class="text-primary text-xs">scan</span>
-      </div>
-      <button class="flex flex-row items-center gap-1 border border-white/10 rounded-lg px-2 py-1"
-        @click="openSearchModal">
-        <Search class="w-3.5 h-3.5 text-white/50" />
-        <span class="text-white/50 text-xs">search</span>
-      </button>
-      <Separator orientation="vertical" class="h-4" />
-    </div>
-
-    <!-- End Ticker Bar -->
+  <AdvancedLayout>
     <div class="flex flex-row items-center gap-3 py-2 px-2 border-b border-white/10">
       <!-- Quick Buy -->
       <!-- Amount + Settings -->
@@ -271,8 +237,7 @@ onMounted(() => {
         Legend
       </button>
     </div>
-
-    <div class="flex flex-row w-full py-5">
+    <div class="flex flex-row w-full py-5 flex-1">
       <div v-for="(col, index) in enabledColumns" :key="col.title"
         class="flex flex-col border-r border-r-white/10 last:border-r-0"
         :style="{ width: `${100 / enabledColumns.length}%` }">
@@ -286,57 +251,23 @@ onMounted(() => {
             <PlayIcon class="w-4 h-4 fill-white" />
           </button>
         </div>
-        <div class="flex flex-col w-full">
-          <ScrollArea class="w-full overflow-hidden p-2" :style="{ height: `calc(100vh - 205px - ${footerHeight}px)` }">
-            <div v-if="launchpadsByColumn[col.title].length > 0" class="flex flex-col w-full">
-              <AdvancedCard v-for="(launchpad, idx) in launchpadsByColumn[col.title]" :key="idx"
-                :launchpad="launchpad" />
-            </div>
-            <div v-else class="flex flex-col items-center justify-center bg-white/10 rounded-lg p-4 w-full gap-2"
-              :style="{ height: `calc(100vh - 225px - ${footerHeight}px)` }">
-              <Inbox class="w-7 h-7 text-white/50" />
-              <div class="text-white/50 text-sm">It's empty here so far</div>
-            </div>
-          </ScrollArea>
+        <div class="flex flex-col flex-1 relative">
+          <div class="flex flex-col w-full h-full absolute inset-0">
+            <ScrollArea class="w-full overflow-hidden p-2">
+              <div v-if="launchpadsByColumn[col.title].length > 0" class="flex flex-col w-full">
+                <AdvancedCard v-for="(launchpad, idx) in launchpadsByColumn[col.title]" :key="idx"
+                  :launchpad="launchpad" />
+              </div>
+              <div v-else class="flex flex-col items-center justify-center bg-white/10 rounded-lg p-4 w-full gap-2">
+                <Inbox class="w-7 h-7 text-white/50" />
+                <div class="text-white/50 text-sm">It's empty here so far</div>
+              </div>
+            </ScrollArea>
+          </div>
         </div>
       </div>
     </div>
-
-    <footer class="w-full z-50 border border-white/10 px-4 py-2 fixed bottom-0 left-0 right-0">
-      <div class="flex flex-row items-center justify-between">
-        <!-- Logo and Brand -->
-        <div class="flex flex-row items-center gap-4">
-          <Link class="flex items-center" href="/">
-          <ApplicationLogo class="block h-full w-auto font-semibold" />
-          <!-- <span class="text-white text-2xl font-bold">pump.club</span> -->
-          </Link>
-          <div class="flex flex-row items-center gap-2">
-            <img src="/avax-icon.svg" class="w-4 h-4" />
-            <span class="text-white/50 text-sm">$156.17</span>
-          </div>
-          <div class="flex flex-row items-center gap-2">
-            <ChartBarIncreasing class="w-4 h-4 text-white/50" />
-            <span class="text-white/50 text-sm">$63.2K</span>
-          </div>
-          <div class="flex items-center gap-2">
-            <span class="h-2 w-2 rounded-full bg-green-400"></span>
-            <span class="text-green-400 font-normal text-sm">Stable Connection</span>
-          </div>
-        </div>
-        <div class="flex flex-row gap-3 items-center">
-          <Link class="text-primary hover:bg-transparent flex items-center gap-1 text-sm whitespace-nowrap"
-            href="/launch">
-          {{ $t('Create Coin') }}
-          <Plus class="w-4 h-4 text-primary" />
-          </Link>
-          <Web3Auth />
-          <button class="text-white/50 hover:text-white transition-colors">
-            <Settings class="w-4 h-4" />
-          </button>
-        </div>
-      </div>
-    </footer>
-  </div>
+  </AdvancedLayout>
 
   <!-- Add Column Modal -->
   <template v-if="addColumnModal">
@@ -475,18 +406,19 @@ onMounted(() => {
           <div class="text-white/60 text-sm mb-2">History:</div>
           <ScrollArea class="w-full overflow-hidden p-2 h-[400px]">
             <div class="flex flex-col gap-2">
-              <div v-for="(item, idx) in searchedLaunchpads" :key="idx"
+              <Link :href="route('advanced.advancedTradingView', { contract: item.contract })"
+                v-for="(item, idx) in searchedLaunchpads" :key="idx"
                 class="flex items-center justify-between py-2 px-2 rounded-lg hover:bg-white/5 transition cursor-pointer">
-                <div class="flex items-center gap-3">
-                  <img :src="item.logo" class="w-10 h-10 rounded-full object-cover border border-white/10" />
-                  <div class="flex flex-col">
-                    <span class="text-white font-medium leading-tight">{{ item.name }}</span>
-                    <span class="text-white/40 text-xs font-mono">{{ item.symbol }}</span>
-                  </div>
+              <div class="flex items-center gap-3">
+                <img :src="item.logo" class="w-10 h-10 rounded-full object-cover border border-white/10" />
+                <div class="flex flex-col">
+                  <span class="text-white font-medium leading-tight">{{ item.name }}</span>
+                  <span class="text-white/40 text-xs font-mono">{{ item.symbol }}</span>
                 </div>
-                <div class="text-white/80 text-sm whitespace-nowrap">Market cap: <span class="font-semibold">{{
-                  item.marketCap }}</span></div>
               </div>
+              <div class="text-white/80 text-sm whitespace-nowrap">Market cap: <span class="font-semibold">{{
+                item.marketCap }}</span></div>
+              </Link>
             </div>
           </ScrollArea>
         </div>

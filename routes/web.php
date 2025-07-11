@@ -30,12 +30,17 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'view'])->name('profile.view');
 });
 
-Route::get('/advanced', [AdvancedController::class, 'advanced'])->name('advanced');
-Route::get('/advanced/search', [AdvancedController::class, 'search'])->name('advanced.search');
+#advanced
+Route::name('advanced.')->controller(AdvancedController::class)->group(function () {
+    Route::get('/advanced', 'advanced')->name('advanced');
+    Route::get('/advanced/search', 'search')->name('search');
+    Route::get('/advanced/coin/{contract}', 'advancedTradingView')
+    ->where('contract', '0x[a-fA-F0-9]{40}')
+    ->name('advancedTradingView');
+});
 
 require __DIR__ . '/otp.php';
 require __DIR__ . '/web3.php';
-
 
 #launchpads
 Route::name('launchpads.')->controller(LaunchpadsController::class)->group(function () {
