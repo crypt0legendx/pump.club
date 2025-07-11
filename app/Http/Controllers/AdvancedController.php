@@ -28,7 +28,22 @@ class AdvancedController extends Controller
 
         $launchpadsItems = $launchpadsQuery->latest('volume24h')->paginate($perPage);
 
-        // If you want to return filtered results for the modal/search, do it separately
+        return Inertia::render('Advanced/Advanced', [
+            'launchpads' => LaunchpadResource::collection($launchpadsItems), 
+            'type' => 'advanced',
+            'top' => function () {
+                return $this->getTopLaunchpads();
+            },
+            'usdRates' => function () {
+                return Rate::all()->keyBy('symbol');
+            }
+        ]);
+    }
+
+    public function search(Request $request)
+    {
+        $keyword = $request->get('search');
+        $perPage = 25;
         $searchedLaunchpads = collect();
         if (!empty($keyword)) {
             $searchedQuery = Launchpad::query()
@@ -45,19 +60,10 @@ class AdvancedController extends Controller
                 });
             $searchedLaunchpads = $searchedQuery->get();
         }
-
-        return Inertia::render('Advanced/Advanced', [
-            'launchpads' => LaunchpadResource::collection($launchpadsItems),
-            'searchedLaunchpads' => LaunchpadResource::collection($searchedLaunchpads),
-            'type' => 'advanced',
-            'top' => function () {
-                return $this->getTopLaunchpads();
-            },
-            'usdRates' => function () {
-                return Rate::all()->keyBy('symbol');
-            }
-        ]);
+        return LaunchpadResource::collection($searchedLaunchpads);
     }
+
+    
 
     /**
      * Get top launchpads by volume

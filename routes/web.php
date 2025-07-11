@@ -31,6 +31,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('/advanced', [AdvancedController::class, 'advanced'])->name('advanced');
+Route::get('/advanced/search', [AdvancedController::class, 'search'])->name('advanced.search');
 
 require __DIR__ . '/otp.php';
 require __DIR__ . '/web3.php';

@@ -2,7 +2,7 @@
 import { computed, ref, onMounted } from "vue";
 
 import { FunnelIcon } from "@heroicons/vue/24/outline";
-import { Link , router } from "@inertiajs/vue3";
+import { Link, router } from "@inertiajs/vue3";
 import { debouncedWatch, useUrlSearchParams } from "@vueuse/core";
 import { ChartBarIncreasing, CircleAlert, EyeOff, GripVertical, House, Inbox, PackagePlus, PlayIcon, Plus, Search, Settings, X } from "lucide-vue-next";
 
@@ -18,13 +18,13 @@ import { Switch } from "@/Components/ui/switch";
 import { useLaunchpadsData } from "@/hooks/useLaunchpadsData";
 import useLocalStorage from '@/hooks/useLocalStorage';
 import { TRADE_SETTINGS } from "@/store/constants";
+import axios from "axios";
 
 const props = defineProps({
   launchpads: [Array, Object],
   top: Array,
   usdRates: [Array, Object],
   type: String,
-  searchedLaunchpads: [Array, Object],
 });
 
 const presetsLists = [
@@ -68,6 +68,7 @@ const mevProtection = ref(true);
 const launchpadsList = computed(() => props.launchpads?.data || []);
 const launchpadsInfo = useLaunchpadsData(launchpadsList, props.usdRates);
 const searchModal = ref(false);
+const searchedLaunchpads = ref([]);
 
 const params = useUrlSearchParams("history");
 const search = ref(params.search ?? "");
@@ -75,14 +76,14 @@ const search = ref(params.search ?? "");
 debouncedWatch(
   [search],
   ([search]) => {
-    router.get(
-      window.route("advanced"),
-      { search },
-      {
-        preserveState: true,
-        preserveScroll: true,
-      },
-    );
+    if (search.trim()) {
+      axios.get(window.route("advanced.search"), { params: { search: search.trim() } })
+        .then(response => {
+          searchedLaunchpads.value = response.data;
+        });
+    } else {
+      searchedLaunchpads.value = [];
+    }
   },
   {
     maxWait: 700,
